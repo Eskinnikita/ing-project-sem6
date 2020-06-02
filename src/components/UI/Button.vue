@@ -1,5 +1,5 @@
 <template>
-    <button class="button-comp" :disabled="isDisabled">
+    <button :style="{'width': width ? width : 'auto'}" class="button-comp" :disabled="isDisabled">
         <slot/>
     </button>
 </template>
@@ -9,6 +9,10 @@
         props: {
             isDisabled: {
                 type: Boolean
+            },
+            width: {
+                type: String,
+                default: null
             }
         }
     }

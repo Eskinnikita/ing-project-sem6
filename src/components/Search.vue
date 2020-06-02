@@ -63,7 +63,7 @@
         },
         computed: {
             isDisabled() {
-                return this.city.value === '' && this.doctor.value === ''
+                return this.city.value === '' && this.doctor.value === '' || this.city.value === ''
             }
         }
     }

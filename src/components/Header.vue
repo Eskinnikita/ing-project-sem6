@@ -5,23 +5,43 @@
                 <img class="title__icon" src="../assets/icons/logo.png" alt="логотип">
                 <h2 class="title__text">medi<strong>center</strong></h2>
             </div>
-            <div class="header__user-profile user-profile">
-                <div class="user-profile__name">
-                    Иванов И.И.
-                </div>
-                <button class="user-profile__button">
-                    выйти
+            <!--            <div class="header__user-profile user-profile">-->
+            <!--                <div class="user-profile__name">-->
+            <!--                    Иванов И.И.-->
+            <!--                </div>-->
+            <!--                <button class="user-profile__button">-->
+            <!--                    выйти-->
+            <!--                </button>-->
+            <!--            </div>-->
+            <div class="header__controls">
+                <button class="underlined-button" @click="openModal('login-modal')">
+                    Войти
+                </button>
+                <button class="underlined-button" @click="openModal('reg-modal')">
+                    Регистрация
                 </button>
             </div>
         </div>
+        <login-modal/>
+        <reg-modal/>
     </header>
 </template>
 
 <script>
+    import LoginModal from "./LoginModal"
+    import RegModal from "./RegModal"
+
     export default {
+        components: {
+            'login-modal': LoginModal,
+            'reg-modal': RegModal
+        },
         methods: {
             goToMainPage() {
                 this.$router.push('/')
+            },
+            openModal(modal) {
+                this.$modal.show(modal);
             }
         }
     }
@@ -73,6 +93,7 @@
             font-size: 15px;
             color: $accent-blue-color;
             text-decoration: underline;
+
             &:hover {
                 text-decoration: underline;
             }

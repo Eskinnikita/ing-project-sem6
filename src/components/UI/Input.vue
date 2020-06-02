@@ -11,6 +11,7 @@
                 :id="id"
                 type="text"
                 :placeholder="placeholder"
+                :style="{'margin-top': label ? '7px' : '0'}"
         >
     </div>
 </template>
@@ -36,11 +37,16 @@
 
 <style lang="scss" scoped>
     .input-block {
+        width: 100%;
+        margin-bottom: 20px;
         &__input {
+            box-sizing: border-box;
+            width: 100%;
             border: 1px solid $border-color;
             height: 40px;
             padding: 0 16px;
             font-size: 15px;
+            border-radius: $border-radius;
         }
     }
 </style>

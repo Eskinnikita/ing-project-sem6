@@ -4,7 +4,8 @@
             <doctors-search :city-prop="city" :doctor-prop="doctor"/>
         </div>
         <div class="search-results__title">
-            <h2>{{doctor.value ? 'Врач' : 'Врачи'}} {{doctor.value.toLowerCase()}} в городе {{city.value}}</h2>
+            <h2 v-if="doctor.value">Врач {{doctor.value.toLowerCase()}} в городе {{city.value}}</h2>
+            <h2 v-else>Врачи в городе {{city.value}}</h2>
         </div>
     </div>
 </template>
@@ -36,7 +37,7 @@
         }
 
         &__title {
-            padding-top: 20px;
+            padding-top: 30px;
         }
     }
 </style>

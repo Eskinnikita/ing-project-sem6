@@ -35,4 +35,27 @@
         margin: 0 auto;
         padding: 0 20px;
     }
+
+    .vm {
+        &--modal {
+            border-radius: 10px !important;
+        }
+
+        &--overlay {
+            background: rgba(0, 0, 0, 0.6) !important;
+        }
+    }
+
+    .underlined-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 15px;
+        color: $accent-blue-color;
+        text-decoration: underline;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
 </style>
