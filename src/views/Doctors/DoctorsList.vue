@@ -7,15 +7,20 @@
             <h2 v-if="doctor.value">Врач {{doctor.value.toLowerCase()}} в городе {{city.value}}</h2>
             <h2 v-else>Врачи в городе {{city.value}}</h2>
         </div>
+        <div class="doctors-list">
+            <doctor-snippet v-for="index in 10" :key="index"/>
+        </div>
     </div>
 </template>
 
 <script>
-    import Search from "../components/Search"
+    import Search from "../../components/Search"
+    import DoctorSnippet from "../../components/DoctorSnippet"
 
     export default {
         components: {
-            'doctors-search': Search
+            'doctors-search': Search,
+            'doctor-snippet': DoctorSnippet
         },
         created() {
             this.city = {value: this.$route.params.city, text: this.$route.params.city}
@@ -33,11 +38,15 @@
 <style lang="scss" scoped>
     .search-results {
         &__search {
-            padding-top: 30px;
+            padding-top: 10px;
         }
 
         &__title {
             padding-top: 30px;
         }
+    }
+
+    .doctors-list {
+        padding-top: 30px;
     }
 </style>

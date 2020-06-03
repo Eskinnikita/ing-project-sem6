@@ -65,6 +65,14 @@
             isDisabled() {
                 return this.city.value === '' && this.doctor.value === '' || this.city.value === ''
             }
+        },
+        watch: {
+            city: {
+                deep: true,
+                handler() {
+                    if(!this.city.value) this.city.value = ''
+                }
+            }
         }
     }
 </script>

@@ -33,7 +33,7 @@
         width: calc(980px + 40px);
         max-width: 100%;
         margin: 0 auto;
-        padding: 0 20px;
+        padding: 20px;
     }
 
     .vm {
@@ -57,5 +57,10 @@
         &:hover {
             text-decoration: underline;
         }
+    }
+
+    .required-sign {
+        color: $accent-pink-color;
+        padding: 0 3px;
     }
 </style>

@@ -7,5 +7,8 @@ module.exports = {
                 './src/scss/_mixins.scss'
             ]
         }
+    },
+    devServer: {
+        port: 8080, proxy: "http://localhost:8082"
     }
 }

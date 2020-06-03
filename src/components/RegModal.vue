@@ -22,7 +22,9 @@
         },
         methods: {
             goToLogin() {
-                this.$modal.hide('reg-modal');
+                setTimeout(() => {
+                    this.$modal.hide('reg-modal');
+                }, 20)
                 this.$modal.show('login-modal');
             }
         }

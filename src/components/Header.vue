@@ -5,15 +5,15 @@
                 <img class="title__icon" src="../assets/icons/logo.png" alt="логотип">
                 <h2 class="title__text">medi<strong>center</strong></h2>
             </div>
-            <!--            <div class="header__user-profile user-profile">-->
-            <!--                <div class="user-profile__name">-->
-            <!--                    Иванов И.И.-->
-            <!--                </div>-->
-            <!--                <button class="user-profile__button">-->
-            <!--                    выйти-->
-            <!--                </button>-->
-            <!--            </div>-->
-            <div class="header__controls">
+            <div class="header__user-profile user-profile" v-if="user">
+                <div class="user-profile__name">
+                    {{user.name}}
+                </div>
+                <button class="user-profile__button" @click="logout">
+                    выйти
+                </button>
+            </div>
+            <div class="header__controls" v-else>
                 <button class="underlined-button" @click="openModal('login-modal')">
                     Войти
                 </button>
@@ -30,6 +30,7 @@
 <script>
     import LoginModal from "./LoginModal"
     import RegModal from "./RegModal"
+    import {mapState} from 'vuex'
 
     export default {
         components: {
@@ -42,7 +43,19 @@
             },
             openModal(modal) {
                 this.$modal.show(modal);
+            },
+            logout() {
+                this.$store.dispatch('logoutUser')
+                .then(() => {
+                    this.$toast.open({
+                        message: 'Вы успешно вышли!',
+                        type: 'success',
+                    });
+                })
             }
+        },
+        computed: {
+            ...mapState(['user'])
         }
     }
 </script>

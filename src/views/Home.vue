@@ -22,7 +22,7 @@
 <style lang="scss" scoped>
     .home {
         &__title {
-            padding-top: 100px;
+            padding-top: 80px;
             width: 100%;
             display: block;
             text-align: center;
