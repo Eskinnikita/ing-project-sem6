@@ -63,4 +63,25 @@
         color: $accent-pink-color;
         padding: 0 3px;
     }
+
+    .toast {
+        font-family: 'Open Sans', sans-serif;
+        background-color: #fff !important;
+        &-success {
+            color: $accent-blue-color !important;
+        }
+
+        &-error {
+            color: $accent-pink-color !important;
+        }
+    }
+
+    .input-wrapper {
+        width: 100%;
+        margin-bottom: 20px;
+        input {
+            margin-top: 7px;
+        }
+    }
+
 </style>

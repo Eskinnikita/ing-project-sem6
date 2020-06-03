@@ -46,12 +46,6 @@
             },
             logout() {
                 this.$store.dispatch('logoutUser')
-                .then(() => {
-                    this.$toast.open({
-                        message: 'Вы успешно вышли!',
-                        type: 'success',
-                    });
-                })
             }
         },
         computed: {

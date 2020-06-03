@@ -71,7 +71,14 @@
                     }
                     else {
                         this.$store.dispatch('loginUser', this.user)
-                        .then(() => {this.$modal.hide('login-modal')})
+                        .then(() => {
+                            this.$modal.hide('login-modal')
+                            this.user = {
+                                email: '',
+                                password: '',
+                                isDoctor: false
+                            }
+                        })
                     }
                 }
             },

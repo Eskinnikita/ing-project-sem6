@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const dbConnect = require('./Connection/sequelize')
+const sequelize = require('./Connection/sequelize')
 const cors = require('cors')
 
 const app = express();
@@ -16,7 +16,7 @@ app.use(cors())
 app.use('/patients', PatientsRoutes)
 
 
-dbConnect.sync()
+sequelize.sync()
     .then(() => {
         app.listen(8082, function () {
             console.log("Соединение установлено")

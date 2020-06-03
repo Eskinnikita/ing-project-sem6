@@ -3,12 +3,13 @@ import Vuex from 'vuex'
 import apiService from "../services/apiService"
 import createPersistedState from "vuex-persistedstate";
 
+import * as PatientsStore from "./modules/patients"
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        user: sessionStorage.getItem('user-token') || null,
-        loadingStatus: false
+        user: sessionStorage.getItem('user-token') || null
     },
     mutations: {
         SET_USER(state, user) {
@@ -17,6 +18,15 @@ export default new Vuex.Store({
         },
         SET_EMPTY_USER(state) {
             state.user = null
+        },
+        SET_TOAST(state, toast) {
+            console.log(toast)
+            this._vm.$toast.open(
+                {
+                    message: toast.message,
+                    type: toast.type
+                }
+            );
         }
     },
     actions: {
@@ -26,18 +36,17 @@ export default new Vuex.Store({
                 if (!user.isDoctor) {
                     res = await apiService.post('patients/login', user)
                 }
-                // if(res === undefined) {
-                //     dispatch('setToast', {message: 'Ошибка входа. Проверьте ФИО или пароль', status: 'error'})
-                // }
                 sessionStorage.setItem('user', JSON.stringify(res.data))
                 commit('SET_USER', res.data)
+                commit('SET_TOAST', {message: 'Вы успешно вошли!', type: 'success'})
             } catch (e) {
-                console.log(e)
+                commit('SET_TOAST', {message: 'Ошибка входа', type: 'error'})
             }
         },
         async logoutUser({commit}) {
             sessionStorage.removeItem('user')
             commit('SET_EMPTY_USER')
+            commit('SET_TOAST', {message: 'Вы успешно вышли!', type: 'success'})
         }
     },
     getters: {
@@ -48,5 +57,8 @@ export default new Vuex.Store({
         {
             storage: window.sessionStorage
         }
-    )]
+    )],
+    modules: {
+        PatientsStore
+    }
 })
