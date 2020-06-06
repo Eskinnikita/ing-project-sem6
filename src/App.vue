@@ -36,6 +36,15 @@
         padding: 20px;
     }
 
+    .thin-container {
+        box-sizing: border-box;
+        width: calc(580px + 40px);
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+
     .vm {
         &--modal {
             border-radius: 10px !important;
@@ -82,6 +91,15 @@
         input {
             margin-top: 7px;
         }
+    }
+
+    textarea {
+        @include textarea(100%, 200px, none)
+    }
+
+    input[type=file] {
+        border: none !important;
+        padding: 0 !important;
     }
 
 </style>

@@ -4,3 +4,15 @@
   align-items: $align;
   flex-direction: $direction;
 }
+
+@mixin textarea($width, $height, $resize) {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  width: $width;
+  height: $height;
+  resize: $resize;
+  border-radius: $border-radius;
+  border: 1px solid $border-color;
+  box-sizing: border-box;
+  padding: 10px;
+}

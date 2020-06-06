@@ -10,6 +10,7 @@
     </div>
 </template>
 <script>
+    import {mapState} from 'vuex'
     import Button from "../components/UI/Button"
     import {ModelSelect} from 'vue-search-select'
     import citiesJson from "../json/cities.json"
@@ -30,8 +31,9 @@
             'model-select': ModelSelect
         },
         created() {
-            if(this.cityProp) this.city = this.cityProp
-            if(this.doctorProp) this.doctor = this.doctorProp
+            this.$store.dispatch('getAllSpecs')
+            if (this.cityProp) this.city = this.cityProp
+            if (this.doctorProp) this.doctor = this.doctorProp
             this.cities = citiesJson.map(el => {
                 return {
                     text: el.name,
@@ -42,10 +44,6 @@
         data() {
             return {
                 cities: null,
-                doctors: [
-                    {value: 'Кардиолог', text: 'Кардиолог'},
-                    {value: 'Стоматолог', text: 'Стоматолог'}
-                ],
                 doctor: {
                     value: '',
                     text: ''
@@ -62,15 +60,24 @@
             }
         },
         computed: {
+            ...mapState(['SpecsStore']),
             isDisabled() {
                 return this.city.value === '' && this.doctor.value === '' || this.city.value === ''
+            },
+            doctors() {
+                return this.SpecsStore.specs.map(el => {
+                    return {
+                        value: el.name,
+                        text: el.name
+                    }
+                })
             }
         },
         watch: {
             city: {
                 deep: true,
                 handler() {
-                    if(!this.city.value) this.city.value = ''
+                    if (!this.city.value) this.city.value = ''
                 }
             }
         }
@@ -85,6 +92,7 @@
         &__select {
             width: 100%;
             padding: 0 10px;
+
             &:first-child {
                 padding-left: 0;
             }

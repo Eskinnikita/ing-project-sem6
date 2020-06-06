@@ -103,6 +103,7 @@
             },
             goToDoctorReg() {
                 this.$router.push('/new-doctor')
+                .then(() => {this.$modal.hide('reg-modal');})
             }
         }
     }

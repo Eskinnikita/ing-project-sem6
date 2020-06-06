@@ -13,7 +13,7 @@ const apiClient = axios.create({
 })
 
 export default {
-    getAll(route) {
+    get(route) {
         return apiClient.get(`/${route}`)
     },
     getById(route, id) {
