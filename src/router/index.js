@@ -15,7 +15,7 @@ const routes = [
         component: Home
     },
     {
-        path: '/doctors/:city?/:spec?',
+        path: '/doctors/:city?/:specId?',
         name: 'DoctorsList',
         component: DoctorsList
     },

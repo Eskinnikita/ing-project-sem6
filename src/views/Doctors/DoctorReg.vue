@@ -51,7 +51,7 @@
                 label="Адрес клиники:"
                 id="password"
                 :required="true"
-                placeholder="г.Москва ул.Пушкина д.23 корп.1"
+                placeholder="ул.Пушкина д.23 корп.1"
                 v-model="doctor.clinicAddress"
         />
         <input-comp

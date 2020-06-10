@@ -1,20 +1,20 @@
 import apiService from "../../services/apiService"
 
-const route = 'specializations'
+const route = 'doctors'
 
 export const state = {
-    specs: []
+    doctors: []
 }
 export const mutations = {
-    SET_SPECS(state, specs) {
-        state.specs = specs
+    SET_DOCTORS(state, doctors) {
+        state.doctors = doctors
     }
 }
 export const actions = {
-    async getAllSpecs({commit}) {
+    async findDoctorsBySpecAndCity({commit}, doctor) {
         try {
-            const data = await apiService.get(route)
-            commit('SET_SPECS', data.data)
+            const result = await apiService.post(route, doctor)
+            commit('SET_DOCTORS', result.data)
         }
         catch(e) {
             commit('SET_TOAST', {message: e.message, type: 'error'})

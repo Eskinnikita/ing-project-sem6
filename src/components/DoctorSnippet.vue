@@ -7,25 +7,25 @@
         </div>
         <div class="doctor-snippet__doctor-info doctor-info">
             <span class="doctor-info__specs">
-                Акушер Политолог Венеролог
+                {{parseSpecs(doctor.doctorSpecs)}}
             </span>
             <h3 @click="goToDoctorDetails" class="doctor-info__name">
-                Васильев Егор Дмитриевич
+                {{doctor.name}}
             </h3>
             <div class="doctor-info__work-time">
-                Стаж 20 лет
+                Стаж {{expToStr(doctor.experience)}}
             </div>
             <div class="doctor-info__price">
-               <span> В клинике <strong> 2200Р</strong></span>
+                <span> {{defineWorkSpace(doctor.workType)}} <strong> {{doctor.visitPrice}}&#8381; </strong></span>
             </div>
             <div class="doctor-info__phone-title">
                 <div>Телефон для записи</div>
             </div>
             <a href="#" class="doctor-info__phone">
-                +7 (939) 323-32-32
+                {{doctor.phoneNumber}}
             </a>
             <div class="doctor-info__address">
-                ул.Пушкина д.Колотушкина, 31
+                г.{{doctor.city}} {{doctor.clinicAddress}}
             </div>
         </div>
     </div>
@@ -33,9 +33,58 @@
 
 <script>
     export default {
+        props: {
+            doctor: {
+                type: Object,
+                required: true
+            }
+        },
         methods: {
             goToDoctorDetails() {
-                this.$router.push('/doctor/1')
+                this.$router.push(`/doctor/${this.doctor.id}`)
+            },
+            defineWorkSpace(type) {
+                let workType = ''
+                switch (type) {
+                    case 1:
+                        workType = 'В клинике'
+                        break;
+                    case 2:
+                        workType = 'Онлайн'
+                        break;
+                    case 3:
+                        workType = 'На дому'
+                        break;
+                }
+                return workType
+            },
+            parseSpecs(specs) {
+                let specsStr = ''
+                for (let i = 0; i < specs.length; i++) {
+                    if (i === specs.length - 1) {
+                        specsStr += ` ${specs[i].specialization.name}`
+                    } else {
+                        specsStr += `${specs[i].specialization.name} •`
+                    }
+                }
+                return specsStr
+            },
+            expToStr(exp) {
+                let txt;
+                let count = exp % 100;
+                if (count >= 5 && count <= 20) {
+                    txt = 'лет';
+                } else {
+                    count = count % 10;
+                    if (count === 1) {
+                        txt = 'год';
+                    } else if (count >= 2 && count <= 4) {
+                        txt = 'года';
+                    } else {
+                        txt = 'лет';
+                    }
+                }
+                return exp + " " + txt;
             }
         }
     }
@@ -62,17 +111,21 @@
 
     .doctor-info {
         padding-left: 35px;
+
         &__specs {
             font-size: 13px;
             color: $dark-gray;
         }
+
         &__name {
             cursor: pointer;
             margin: 10px 0;
             transition: color 0.1s;
+
             &:hover {
                 color: $accent-blue-color;
             }
+
             /*font-weight: normal;*/
         }
 
@@ -87,7 +140,7 @@
         &__phone-title {
             font-size: 13px;
             color: $dark-gray;
-            margin: 40px 0 5px 0;
+            margin: 30px 0 7px 0;
         }
 
         &__phone {
@@ -98,7 +151,7 @@
         }
 
         &__address {
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 15px;
         }
     }

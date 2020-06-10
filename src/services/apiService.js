@@ -16,6 +16,10 @@ export default {
     get(route) {
         return apiClient.get(`/${route}`)
     },
+    getByParams(route, data) {
+        console.log(data)
+        return apiClient.get(`/${route}`, {params: data})
+    },
     getById(route, id) {
         return apiClient.get(`/${route}/${id}`)
     },

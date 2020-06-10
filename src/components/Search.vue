@@ -56,6 +56,10 @@
         },
         methods: {
             findDoctors() {
+                this.$store.dispatch('findDoctorsBySpecAndCity', {
+                    city: this.city.value,
+                    specId: this.doctor.id
+                })
                 this.$router.push(`/doctors/${this.city.value}/${this.doctor.value}`)
             }
         },
@@ -67,6 +71,7 @@
             doctors() {
                 return this.SpecsStore.specs.map(el => {
                     return {
+                        id: el.id,
                         value: el.name,
                         text: el.name
                     }

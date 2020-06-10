@@ -7,6 +7,7 @@ const app = express();
 
 const PatientsRoutes = require('./Routes/Patients')
 const SpecsRoutes = require('./Routes/Specs')
+const DoctorsRoutes = require('./Routes/Doctors')
 
 app.use(bodyParser.urlencoded({
     extended: false
@@ -16,6 +17,7 @@ app.use(cors())
 
 app.use('/patients', PatientsRoutes)
 app.use('/specializations', SpecsRoutes)
+app.use('/doctors', DoctorsRoutes)
 
 
 sequelize.sync()
