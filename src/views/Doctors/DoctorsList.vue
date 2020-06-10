@@ -4,7 +4,7 @@
             <doctors-search :city-prop="city" :doctor-prop="doctor"/>
         </div>
         <div class="search-results__title" v-if="doctorsCount">
-            <h2 v-if="doctor.value">Врач {{doctor.value.toLowerCase()}} в городе {{city.value}} <span class="gray-text">• 10</span></h2>
+            <h2 v-if="doctor.value">Врач {{doctor.value.toLowerCase()}} в городе {{city.value}} <span class="gray-text">• {{doctorsCount}}</span></h2>
             <h2 v-else>Врачи в городе {{city.value}} <span class="gray-text">• {{doctorsCount}}</span></h2>
         </div>
         <div class="doctors-list" v-if="doctorsCount">
