@@ -66,7 +66,7 @@
         computed: {
             ...mapState(['SpecsStore']),
             isDisabled() {
-                return this.city.value === '' && this.doctor.value === '' || this.city.value === ''
+                return this.city.value === '' || this.doctor.value === ''
             },
             doctors() {
                 return this.SpecsStore.specs.map(el => {

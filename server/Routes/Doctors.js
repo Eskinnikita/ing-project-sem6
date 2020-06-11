@@ -13,27 +13,19 @@ router.post('/', urlencodedParser, async (req, res) => {
     try {
         const city = req.body.city
         const specId = req.body.specId
-        console.log(city, specId)
-        Doctor.hasMany(DoctorSpecs)
-        Spec.hasMany(DoctorSpecs, {foreignKey: 'specId'})
-        DoctorSpecs.belongsTo(Spec, {foreignKey: 'id'})
+        Doctor.belongsToMany(Spec, { through: DoctorSpecs, foreignKey: 'doctorId'})
+        Spec.belongsToMany(Doctor, { through: DoctorSpecs, foreignKey: 'specId'})
         const doctors = await Doctor.findAll({
             where: {
                 city: city,
+                isApproved: true,
                 id: {
                     [Op.in]: sequelize.literal(`(SELECT DISTINCT ds.doctorId from doctorSpecs ds WHERE ds.specId = ${specId})`),
                 }
             },
             include: [
                 {
-                    model: DoctorSpecs,
-                    attributes: ['specId'],
-                    include: [
-                        {
-                            model: Spec,
-                            required: true
-                        }
-                    ]
+                    model: Spec
                 }
             ]
         })
@@ -42,5 +34,27 @@ router.post('/', urlencodedParser, async (req, res) => {
         res.status(500).send({'message': e.message})
     }
 })
+
+// router.get('/all', urlencodedParser, async (req, res) => {
+//     try {
+//         Doctor.belongsToMany(Spec, { through: DoctorSpecs, foreignKey: 'doctorId'})
+//         Spec.belongsToMany(Doctor, { through: DoctorSpecs, foreignKey: 'specId'})
+//         const doctors = await Doctor.findAll({
+//             where: {
+//                 isApproved: 1
+//             },
+//             include: [
+//                 {
+//                     model: Spec
+//                 }
+//             ]
+//         })
+//         res.status(200).send(doctors)
+//     } catch (e) {
+//         res.status(500).send({'message': e.message})
+//     }
+// })
+
+
 
 module.exports = router

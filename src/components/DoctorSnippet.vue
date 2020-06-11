@@ -7,7 +7,7 @@
         </div>
         <div class="doctor-snippet__doctor-info doctor-info">
             <span class="doctor-info__specs">
-                {{parseSpecs(doctor.doctorSpecs)}}
+                {{parseSpecs(doctor.specializations)}}
             </span>
             <h3 @click="goToDoctorDetails" class="doctor-info__name">
                 {{doctor.name}}
@@ -16,13 +16,13 @@
                 Стаж {{expToStr(doctor.experience)}}
             </div>
             <div class="doctor-info__price">
-                <span> {{defineWorkSpace(doctor.workType)}} <strong> {{doctor.visitPrice}}&#8381; </strong></span>
+                <span> {{defineWorkSpace(doctor.workType)}} <strong> {{doctor.visitPrice}} &#8381; </strong></span>
             </div>
             <div class="doctor-info__phone-title">
                 <div>Телефон для записи</div>
             </div>
             <a href="#" class="doctor-info__phone">
-                {{doctor.phoneNumber}}
+                +7{{doctor.phoneNumber}}
             </a>
             <div class="doctor-info__address">
                 г.{{doctor.city}} {{doctor.clinicAddress}}
@@ -60,11 +60,13 @@
             },
             parseSpecs(specs) {
                 let specsStr = ''
-                for (let i = 0; i < specs.length; i++) {
-                    if (i === specs.length - 1) {
-                        specsStr += ` ${specs[i].specialization.name}`
-                    } else {
-                        specsStr += `${specs[i].specialization.name} •`
+                for (const index in specs) {
+                    if (specs.length) {
+                        if (+index === specs.length - 1) {
+                            specsStr += ` ${specs[index].name}`
+                        } else {
+                            specsStr += `${specs[index].name} • `
+                        }
                     }
                 }
                 return specsStr
@@ -105,7 +107,8 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background-color: blue;
+            background: url(https://images.theconversation.com/files/304957/original/file-20191203-66986-im7o5.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip) 0 0 no-repeat;
+            background-size: cover;
         }
     }
 

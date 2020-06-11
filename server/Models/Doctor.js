@@ -48,6 +48,9 @@ const Doctor = sequelize.define("doctor", {
     },
     city: {
         type: DataTypes.STRING
+    },
+    isApproved: {
+        type: DataTypes.BOOLEAN
     }
 });
 
