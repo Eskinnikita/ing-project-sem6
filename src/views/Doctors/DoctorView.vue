@@ -3,7 +3,7 @@
         <div class="doctor-view__doctor-info doctor-info">
             <div class="doctor-info__info">
                 <div class="doctor-info__photo">
-                    <img src="https://static.mk.ru/upload/entities/2018/04/26/articles/detailPicture/00/63/3b/09/e35fc66bb21b43e3ccab5593d16e16cd.jpg" :alt="doctor.name">
+                    <img :src="doctor.photo" :alt="doctor.name">
                     <star-rating
                             :show-rating="false"
                             :border-width="0"

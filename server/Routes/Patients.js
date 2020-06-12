@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
             password: req.body.password,
             birthDate: req.body.birthDate,
             gender: req.body.gender,
-            role: 0
+            role: 1
         })
             .then(data => {
                 res.status(200).send(data)

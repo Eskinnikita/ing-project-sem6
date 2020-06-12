@@ -4,6 +4,7 @@ const route = 'doctors'
 
 export const state = {
     doctors: [],
+    notApprovedDoctors: [],
     doctor: {}
 }
 export const mutations = {
@@ -15,6 +16,9 @@ export const mutations = {
     },
     SET_EMPTY_DOCTOR(state) {
         state.doctor = {}
+    },
+    SET_NOT_APPROVED_DOCTORS(state, doctors) {
+        state.notApprovedDoctors = doctors
     }
 }
 export const actions = {
@@ -33,7 +37,24 @@ export const actions = {
         } catch (e) {
             commit('SET_TOAST', {message: e.message, type: 'error'})
         }
+    },
+    async addDoctor({commit}, doctor) {
+        try {
+            await apiService.post(`${route}/new-partner`, doctor)
+            commit('SET_TOAST', {message: 'Заявка успешно отправлена!', type: 'success'})
+        } catch (e) {
+            commit('SET_TOAST', {message: e.message, type: 'error'})
+        }
+    },
+    async getNotApprovedDoctors({commit}) {
+        try {
+            const notApprovedDoctors = await apiService.get(`${route}/not-approved`)
+            commit('SET_NOT_APPROVED_DOCTORS', notApprovedDoctors.data)
+        } catch (e) {
+            commit('SET_TOAST', {message: e.message, type: 'error'})
+        }
     }
 }
+
 
 export const getters = {}

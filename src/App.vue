@@ -13,7 +13,7 @@
     export default {
         components: {
             'header-comp': Header
-        }
+        },
     }
 </script>
 
@@ -22,6 +22,11 @@
 
     body {
         background-color: $background-color;
+    }
+
+    a {
+        width: 100%;
+        text-decoration: none;
     }
 
     #app {
@@ -89,7 +94,7 @@
         width: 100%;
         margin-bottom: 20px;
         input {
-            margin-top: 7px;
+            /*margin-top: 7px;*/
         }
     }
 

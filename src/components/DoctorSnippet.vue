@@ -1,9 +1,8 @@
 <template>
+<!--    <div class="doctor-snippet" v-if="doctor.id !== user.id">-->
     <div class="doctor-snippet">
         <div class="doctor-snippet__photo">
-            <div class="doctor-snippet__doctor">
-
-            </div>
+            <img :src="doctor.photo" class="doctor-snippet__doctor" :alt="doctor.name"/>
         </div>
         <div class="doctor-snippet__doctor-info doctor-info">
             <span class="doctor-info__specs">
@@ -32,6 +31,7 @@
 </template>
 
 <script>
+    import {mapState} from 'vuex'
     export default {
         props: {
             doctor: {
@@ -96,6 +96,9 @@
                 }
                 return exp + " " + txt;
             }
+        },
+        computed: {
+            ...mapState(['user'])
         }
     }
 </script>
@@ -115,8 +118,7 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background: url(https://images.theconversation.com/files/304957/original/file-20191203-66986-im7o5.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip) 0 0 no-repeat;
-            background-size: cover;
+            object-fit: cover;
         }
     }
 

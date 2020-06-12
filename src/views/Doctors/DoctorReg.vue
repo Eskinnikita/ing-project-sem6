@@ -2,13 +2,6 @@
     <div class="doctor-registration thin-container">
         <h2 class="doctor-registration__title">Регистрация врача</h2>
         <input-comp
-                label="ФИО:"
-                id="name"
-                :required="true"
-                placeholder="Иванов Иван Иванович"
-                v-model="doctor.name"
-        />
-        <input-comp
                 label="Почта:"
                 id="mail"
                 :required="true"
@@ -24,11 +17,22 @@
                 v-model="doctor.password"
         />
         <input-comp
-                label="Фотография:"
-                id="password"
+                label="ФИО:"
+                id="name"
                 :required="true"
-                type="file"
-                v-model="doctor.photo"
+                placeholder="Иванов Иван Иванович"
+                v-model="doctor.name"
+        />
+        <div class="input-wrapper">
+            <label for="city">Фотография:</label>
+            <input ref="previewImageInput" @input="convertToBase64" type="file"/>
+        </div>
+        <input-comp
+                label="Телефон:"
+                id="phoneNumber"
+                :required="true"
+                type="text"
+                v-model="doctor.phoneNumber"
         />
         <div class="input-wrapper">
             <label>Ваши специальности:</label>
@@ -43,6 +47,28 @@
                     :options="SpecsStore.specs"
             />
         </div>
+        <input-comp
+                label="Стаж работы (лет):"
+                id="password"
+                :required="true"
+                type="number"
+                v-model="doctor.experience"
+        />
+        <div class="input-wrapper">
+            <label for="city">Тип работы:</label>
+            <model-select id="workType" v-model="doctor.workType" placeholder="Город" :options="workTypes"/>
+        </div>
+        <input-comp
+                label="Стоимость приема (от):"
+                id="price"
+                :required="true"
+                type="number"
+                v-model="doctor.visitPrice"
+        />
+        <div class="input-wrapper">
+            <label for="city">О себе:</label>
+            <textarea v-model="doctor.description"/>
+        </div>
         <div class="input-wrapper">
             <label for="city">Ваш город:</label>
             <model-select id="city" v-model="doctor.city" placeholder="Город" :options="cities"/>
@@ -54,17 +80,6 @@
                 placeholder="ул.Пушкина д.23 корп.1"
                 v-model="doctor.clinicAddress"
         />
-        <input-comp
-                label="Стаж работы (лет):"
-                id="password"
-                :required="true"
-                type="number"
-                v-model="doctor.experience"
-        />
-        <div class="input-wrapper">
-            <label for="city">О себе:</label>
-            <textarea v-model="doctor.about"/>
-        </div>
         <button-comp @click.native="addDoctor">Оставить заявку</button-comp>
     </div>
 </template>
@@ -98,22 +113,57 @@
                 cities: null,
                 doctor: {
                     name: '',
+                    workType: 1,
                     email: '',
                     photo: '',
+                    phoneNumber: '+7',
                     password: '',
                     specs: [],
                     city: '',
                     clinicAddress: '',
+                    visitPrice: '',
                     experience: 0,
-                    about: '',
-                    approved: false,
-                }
+                    description: '',
+                    isApproved: false,
+                    role: 2
+                },
+                workTypes: [
+                    {
+                        value: 1,
+                        text: 'В клинике'
+                    },
+                    {
+                        value: 2,
+                        text: 'Онлайн'
+                    },
+                    {
+                        value: 3,
+                        text: 'На дому'
+                    }
+                ]
             }
         },
         methods: {
             addDoctor() {
-                console.log(this.doctor)
-            }
+                this.$store.dispatch('addDoctor', this.doctor)
+                .then(() => {
+                    this.$router.push('/')
+                })
+            },
+            getBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = error => reject(error);
+                });
+            },
+            async convertToBase64() {
+                const previewImageFile = this.$refs.previewImageInput.files[0];
+                this.getBase64(previewImageFile).then(
+                    data => this.doctor.photo = data
+                );
+            },
         },
         computed: {
             ...mapState(['SpecsStore'])

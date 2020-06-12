@@ -56,7 +56,9 @@ export default new Vuex.Store({
     },
     getters: {
         isAuthenticated: state => !!state.user,
-        isAdmin: state => state.user.isAdmin
+        isAdmin: state => state.user.role === 3,
+        isPatient: state => state.user.role === 1,
+        isDoctor: state => state.user.role === 1
     },
     plugins: [createPersistedState(
         {

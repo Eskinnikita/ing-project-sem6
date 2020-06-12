@@ -10,9 +10,9 @@
 <!--                    {{user.role === 2 ? parseFullName(user.name) : user.name}}-->
                     <dropdown-menu/>
                 </div>
-                <button class="user-profile__button" @click="logout">
-                    выйти
-                </button>
+<!--                <button class="user-profile__button" @click="logout">-->
+<!--                    выйти-->
+<!--                </button>-->
             </div>
             <div class="header__controls" v-else>
                 <button class="underlined-button" @click="openModal('login-modal')">
@@ -46,9 +46,6 @@
             },
             openModal(modal) {
                 this.$modal.show(modal);
-            },
-            logout() {
-                this.$store.dispatch('logoutUser')
             }
         },
         computed: {

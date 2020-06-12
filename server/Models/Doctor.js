@@ -23,7 +23,7 @@ const Doctor = sequelize.define("doctor", {
         allowNull: false
     },
     photo: {
-        type: DataTypes.BLOB,
+        type: DataTypes.TEXT,
     },
     phoneNumber: {
         type: DataTypes.STRING,
