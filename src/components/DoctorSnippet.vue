@@ -21,8 +21,8 @@
             <div class="doctor-info__phone-title">
                 <div>Телефон для записи</div>
             </div>
-            <a href="#" class="doctor-info__phone">
-                +7{{doctor.phoneNumber}}
+            <a :href="`tel:+7${doctor.phoneNumber}`" class="doctor-info__phone">
+                +7 {{doctor.phoneNumber | phone}}
             </a>
             <div class="doctor-info__address">
                 г.{{doctor.city}} {{doctor.clinicAddress}}
@@ -37,6 +37,12 @@
             doctor: {
                 type: Object,
                 required: true
+            }
+        },
+        filters: {
+            phone(phoneNum) {
+                return phoneNum.replace(/[^0-9]/g, '')
+                    .replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
             }
         },
         methods: {
@@ -57,7 +63,8 @@
                         break;
                 }
                 return workType
-            },
+            }
+            ,
             parseSpecs(specs) {
                 let specsStr = ''
                 for (const index in specs) {
@@ -70,7 +77,8 @@
                     }
                 }
                 return specsStr
-            },
+            }
+            ,
             expToStr(exp) {
                 let txt;
                 let count = exp % 100;

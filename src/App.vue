@@ -102,4 +102,14 @@
         padding: 0 !important;
     }
 
+    .title {
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: .875rem;
+        line-height: 1.25rem;
+        font-weight: 400;
+    }
+
 </style>

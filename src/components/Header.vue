@@ -7,7 +7,8 @@
             </div>
             <div class="header__user-profile user-profile" v-if="user">
                 <div class="user-profile__name">
-                    {{user.name}}
+<!--                    {{user.role === 2 ? parseFullName(user.name) : user.name}}-->
+                    <dropdown-menu/>
                 </div>
                 <button class="user-profile__button" @click="logout">
                     выйти
@@ -31,11 +32,13 @@
     import LoginModal from "./LoginModal"
     import RegModal from "./RegModal"
     import {mapState} from 'vuex'
+    import DropdownMenu from "./UI/DropdownMenu"
 
     export default {
         components: {
             'login-modal': LoginModal,
-            'reg-modal': RegModal
+            'reg-modal': RegModal,
+            'dropdown-menu': DropdownMenu
         },
         methods: {
             goToMainPage() {

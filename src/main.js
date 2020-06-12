@@ -6,8 +6,10 @@ import VModal from 'vue-js-modal'
 import Vuelidate from 'vuelidate'
 import VueToast from 'vue-toast-notification';
 
+
 import 'vue-search-select/dist/VueSearchSelect.css'
 import 'vue-toast-notification/dist/theme-default.css';
+
 
 Vue.use(VueToast);
 Vue.use(VModal)

@@ -38,6 +38,9 @@ export default new Vuex.Store({
                 if (!user.isDoctor) {
                     res = await apiService.post('patients/login', user)
                 }
+                else {
+                    res = await apiService.post('doctors/login', user)
+                }
                 sessionStorage.setItem('user', JSON.stringify(res.data))
                 commit('SET_USER', res.data)
                 commit('SET_TOAST', {message: 'Вы успешно вошли!', type: 'success'})
