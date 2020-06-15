@@ -1,50 +1,55 @@
 <template>
-    <div class="doctor-view">
-        <div class="doctor-view__doctor-info doctor-info">
-            <div class="doctor-info__info">
-                <div class="doctor-info__photo">
-                    <img :src="doctor.photo" :alt="doctor.name">
-                    <star-rating
-                            :show-rating="false"
-                            :border-width="0"
-                            border-color="#24B9D7"
-                            :star-size="23"
-                            inactive-color="#bebebe"
-                            active-color="#24B9D7"
-                            :rating="3.8"
-                            :read-only="true"
-                            :increment="0.01"/>
+    <div class="doctor-view-container">
+        <approve-form v-if="isAdmin && doctor.id && !doctor.isApproved" :name="doctor.name" :id="doctor.id"/>
+        <div class="doctor-view">
+            <div class="doctor-view__doctor-info doctor-info">
+                <div class="doctor-info__info">
+                    <div class="doctor-info__photo">
+                        <img :src="`http://localhost:8082/${doctor.photo}`" :alt="doctor.name">
+                        <star-rating
+                                :show-rating="false"
+                                :border-width="0"
+                                border-color="#24B9D7"
+                                :star-size="23"
+                                inactive-color="#bebebe"
+                                active-color="#24B9D7"
+                                :rating="doctor.rating"
+                                :read-only="true"
+                                :increment="0.01"/>
+                    </div>
+                    <div class="doctor-info__desc">
+                        <h3 class="doctor-info__name">{{doctor.name}}</h3>
+                        <span class="doctor-info__specs">{{parseSpecs(doctor.specializations)}}</span>
+                        <span>Стаж {{expToStr(doctor.experience)}}</span>
+                        <span class="doctor-info__price">От {{doctor.visitPrice}} &#8381;</span>
+                    </div>
                 </div>
-                <div class="doctor-info__desc">
-                    <h3 class="doctor-info__name">{{doctor.name}}</h3>
-                    <span class="doctor-info__specs">{{parseSpecs(doctor.specializations)}}</span>
-                    <span>Стаж {{expToStr(doctor.experience)}}</span>
-                    <span class="doctor-info__price">От {{doctor.visitPrice}} &#8381;</span>
+                <div class="doctor-info__about">
+                    <h2 class="title">Информация о враче</h2>
+                    <p>{{doctor.description}}</p>
+                </div>
+                <div class="doctor-info__reviews">
+                    <h2 class="title">Отзывы</h2>
                 </div>
             </div>
-            <div class="doctor-info__about">
-                <h2 class="title">Информация о враче</h2>
-                <p>{{doctor.description}}</p>
+            <div class="doctor-view__doctor-schedule doctor-schedule">
+                <h2 class="title">Расписание врача</h2>
+                <schedule/>
             </div>
-            <div class="doctor-info__reviews">
-                <h2 class="title">Отзывы</h2>
-            </div>
-        </div>
-        <div class="doctor-view__doctor-schedule doctor-schedule">
-            <h2 class="title">Расписание врача</h2>
-            <schedule/>
         </div>
     </div>
 </template>
 
 <script>
-    import {mapState} from 'vuex'
+    import {mapState, mapGetters} from 'vuex'
     import StarRating from 'vue-star-rating'
     import Schedule from "../../components/Schedule"
+    import ApproveForm from "../../components/Admin/ApproveForm"
     export default {
         components: {
             StarRating,
-            Schedule
+            Schedule,
+            ApproveForm
         },
         created() {
             this.$store.dispatch('findDoctorById', this.$route.params.id)
@@ -103,6 +108,7 @@
         },
         computed: {
             ...mapState(['DoctorsStore']),
+            ...mapGetters(['isAdmin']),
             doctor() {
                 return this.DoctorsStore.doctor
             }
@@ -158,6 +164,7 @@
                 object-fit: cover;
                 border-radius: 50%;
                 margin-bottom: 10px;
+                border: 1px solid #d7d7d7ed;
             }
         }
 

@@ -38,10 +38,17 @@ export const actions = {
             commit('SET_TOAST', {message: e.message, type: 'error'})
         }
     },
-    async addDoctor({commit}, doctor) {
+    async addDoctor({commit, dispatch}, doctor) {
         try {
             await apiService.post(`${route}/new-partner`, doctor)
-            commit('SET_TOAST', {message: 'Заявка успешно отправлена!', type: 'success'})
+                .then(result => {
+                    commit('SET_TOAST', {message: 'Заявка успешно отправлена!', type: 'success'})
+                    dispatch('loginUser', {
+                        email: result.data.email,
+                        password: result.data.password,
+                        isDoctor: true
+                    })
+                })
         } catch (e) {
             commit('SET_TOAST', {message: e.message, type: 'error'})
         }
@@ -51,6 +58,18 @@ export const actions = {
             const notApprovedDoctors = await apiService.get(`${route}/not-approved`)
             commit('SET_NOT_APPROVED_DOCTORS', notApprovedDoctors.data)
         } catch (e) {
+            commit('SET_TOAST', {message: e.message, type: 'error'})
+        }
+    },
+    async approveDoctor({commit}, doctor) {
+        try {
+            console.log(doctor)
+            await apiService.update(`${route}`, doctor.id,  doctor)
+                .then(() => {
+                    commit('SET_TOAST', {message: 'Заявка успешно одобрена!', type: 'success'})
+                })
+        }
+        catch(e) {
             commit('SET_TOAST', {message: e.message, type: 'error'})
         }
     }

@@ -13,7 +13,7 @@
     export default {
         components: {
             'header-comp': Header
-        },
+        }
     }
 </script>
 
@@ -21,6 +21,7 @@
     @import "./scss/reset.scss";
 
     body {
+        position: relative;
         background-color: $background-color;
     }
 
@@ -31,6 +32,7 @@
 
     #app {
         font-family: 'Open Sans', sans-serif;
+        height: 100%;
     }
 
     .container {

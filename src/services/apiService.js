@@ -26,8 +26,8 @@ export default {
     delete(route, id) {
         return apiClient.delete(`/${route}/${id}`)
     },
-    update(route, data) {
-        return apiClient.put(`/${route}`, data)
+    update(route, id, data) {
+        return apiClient.put(`/${route}/${id}`, data)
     },
     post(route, data) {
         return apiClient.post(`/${route}`, data)

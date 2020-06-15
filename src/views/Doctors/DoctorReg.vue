@@ -25,7 +25,7 @@
         />
         <div class="input-wrapper">
             <label for="city">Фотография:</label>
-            <input ref="previewImageInput" @input="convertToBase64" type="file"/>
+            <input ref="previewImageInput" @input="setPhoto" type="file"/>
         </div>
         <input-comp
                 label="Телефон:"
@@ -110,12 +110,13 @@
         },
         data() {
             return {
+                imageUrl: '',
                 cities: null,
+                photo: null,
                 doctor: {
                     name: '',
                     workType: 1,
                     email: '',
-                    photo: '',
                     phoneNumber: '+7',
                     password: '',
                     specs: [],
@@ -145,28 +146,40 @@
         },
         methods: {
             addDoctor() {
-                this.$store.dispatch('addDoctor', this.doctor)
-                .then(() => {
-                    this.$router.push('/')
-                })
+                const formData = new FormData();
+                for(let key in this.doctor) {
+                    if(key !== 'specs') {
+                        formData.append(`${key}`, this.doctor[key])
+                    }
+                }
+                formData.append('photo', this.photo)
+                formData.append('specs', JSON.stringify(this.doctor.specs))
+                this.$store.dispatch('addDoctor', formData)
+                    .then(() => {
+                        this.$router.push('/')
+                    })
             },
-            getBase64(file) {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = error => reject(error);
-                });
-            },
-            async convertToBase64() {
-                const previewImageFile = this.$refs.previewImageInput.files[0];
-                this.getBase64(previewImageFile).then(
-                    data => this.doctor.photo = data
-                );
-            },
+            setPhoto() {
+                this.photo = this.$refs.previewImageInput.files[0];
+            }
+            // getBase64(file) {
+            //     return new Promise((resolve, reject) => {
+            //         const reader = new FileReader();
+            //         reader.readAsDataURL(file);
+            //         reader.onload = () => resolve(reader.result);
+            //         reader.onerror = error => reject(error);
+            //     });
+            // },
+            // async convertToBase64() {
+            //     const previewImageFile = this.$refs.previewImageInput.files[0];
+            //     this.getBase64(previewImageFile).then(
+            //         data => this.doctor.photo = data
+            //     )
+            // }
         },
         computed: {
-            ...mapState(['SpecsStore'])
+            ...
+                mapState(['SpecsStore'])
         }
     }
 </script>

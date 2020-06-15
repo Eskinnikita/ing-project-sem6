@@ -6,6 +6,35 @@ const router = express.Router()
 const bodyParser = require("body-parser");
 const sequelize = require('sequelize')
 const {Op} = require("sequelize");
+const multer  = require('multer')
+
+//files upload config
+const storage = multer.diskStorage({
+    destination(req, file, cb) {
+        cb(null, './uploads/')
+    },
+    filename(req, file, cb) {
+        cb(null, new Date().toISOString() + file.originalname)
+    }
+})
+
+const fileFilter = (req, file, cb) => {
+    //reject file
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpeg') {
+        cb(null, true)
+    }
+    else {
+        cb(null, false)
+    }
+}
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+})
 
 const urlencodedParser = bodyParser.urlencoded({extended: false});
 
@@ -28,7 +57,7 @@ router.post('/login', async (req, res) => {
 })
 
 //find doctors by city and specialization
-router.post('/', urlencodedParser, async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const city = req.body.city
         const specId = req.body.specId
@@ -77,13 +106,14 @@ router.get('/all', urlencodedParser, async (req, res) => {
 
 
 //add doctor to approving admin list
-router.post('/new-partner', async (req, res) => {
+router.post('/new-partner', upload.single('photo'), async (req, res) => {
     try {
         await Doctor.create({
             email: req.body.email,
             password: req.body.password,
             name: req.body.name,
-            photo: req.body.photo,
+            rating: 0,
+            photo: req.file.path,
             phoneNumber: req.body.phoneNumber,
             experience: req.body.experience,
             description: req.body.description,
@@ -95,14 +125,15 @@ router.post('/new-partner', async (req, res) => {
             role: 2
         })
             .then(result => {
-                const specsArr = req.body.specs.map(el => {
+                const specs = JSON.parse(req.body.specs)
+                const specsArr = specs.map(el => {
                     return {
                         doctorId: result.dataValues.id,
                         specId: el.id
                     }
                 })
-                DoctorSpecs.bulkCreate(specsArr).then(results => {
-                    res.status(200).send(results)
+                DoctorSpecs.bulkCreate(specsArr).then(() => {
+                    res.status(200).send(result)
                 })
             })
             .catch(e => {
@@ -112,6 +143,7 @@ router.post('/new-partner', async (req, res) => {
         res.status(500).send({'message': e.message})
     }
 })
+
 
 //get not approved doctors
 router.get('/not-approved', urlencodedParser, async (req, res) => {
@@ -153,7 +185,6 @@ router.get('/:id', async (req, res) => {
                 res.status(200).send(result)
             })
             .catch(e => {
-                console.log(e)
                 res.status(404).send({message: 'Доктор не найден'})
             })
     } catch (e) {
@@ -161,6 +192,25 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+//approve doctor
+router.put('/:id', async (req, res) => {
+    try {
+        const doctor = await Doctor.update(
+            {
+                'isApproved': true
+            },
+            {
+                where: {
+                    id: req.params.id
+                }
+            }
+        )
+        res.status(200).send(doctor)
+    } catch (e) {
+        console.log(e)
+        res.status(500).send({id: req.params.id, 'message': e.message})
+    }
+})
 
 
 module.exports = router

@@ -29,8 +29,8 @@
 </template>
 
 <script>
-    import LoginModal from "./LoginModal"
-    import RegModal from "./RegModal"
+    import LoginModal from "./Modals/LoginModal"
+    import RegModal from "./Modals/RegModal"
     import {mapState} from 'vuex'
     import DropdownMenu from "./UI/DropdownMenu"
 

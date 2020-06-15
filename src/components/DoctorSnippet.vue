@@ -1,8 +1,19 @@
 <template>
-<!--    <div class="doctor-snippet" v-if="doctor.id !== user.id">-->
+    <!--    <div class="doctor-snippet" v-if="doctor.id !== user.id">-->
     <div class="doctor-snippet">
         <div class="doctor-snippet__photo">
-            <img :src="doctor.photo" class="doctor-snippet__doctor" :alt="doctor.name"/>
+            <img :src="`http://localhost:8082/${doctor.photo}`" class="doctor-snippet__doctor" :alt="doctor.name"/>
+            <star-rating
+                    :show-rating="false"
+                    :border-width="0"
+                    border-color="#24B9D7"
+                    :star-size="23"
+                    inactive-color="#bebebe"
+                    active-color="#24B9D7"
+                    :rating="doctor.rating"
+                    :read-only="true"
+                    :increment="0.01"
+            />
         </div>
         <div class="doctor-snippet__doctor-info doctor-info">
             <span class="doctor-info__specs">
@@ -32,12 +43,17 @@
 
 <script>
     import {mapState} from 'vuex'
+    import StarRating from "vue-star-rating"
+
     export default {
         props: {
             doctor: {
                 type: Object,
                 required: true
             }
+        },
+        components: {
+            StarRating
         },
         filters: {
             phone(phoneNum) {
@@ -119,6 +135,8 @@
             height: 100px;
             border-radius: 50%;
             object-fit: cover;
+            border: 1px solid #d7d7d7ed;
+            margin-bottom: 5px;
         }
     }
 

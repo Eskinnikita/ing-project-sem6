@@ -35,6 +35,9 @@
         components: {
             'dropdown-menu': DropdownMenu
         },
+        created() {
+
+        },
         data() {
             return {
                 isOpened: false

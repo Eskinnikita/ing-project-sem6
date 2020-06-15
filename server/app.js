@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({
 }))
 app.use(bodyParser.json())
 app.use(cors())
+app.use('/uploads', express.static('uploads'))
 
 app.use('/patients', PatientsRoutes)
 app.use('/specializations', SpecsRoutes)

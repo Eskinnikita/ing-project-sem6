@@ -56,8 +56,8 @@
 <script>
     import DatePicker from 'vue2-datepicker';
     import 'vue2-datepicker/index.css';
-    import Input from "./UI/Input"
-    import Button from "./UI/Button"
+    import Input from "../UI/Input"
+    import Button from "../UI/Button"
     import {required} from 'vuelidate/lib/validators'
 
     export default {

@@ -1,5 +1,5 @@
 <template>
-    <button :style="{'width': width ? width : 'auto'}" class="button-comp" :disabled="isDisabled">
+    <button :style="{'width': width ? width : 'auto' }" :class="reject ? 'button-comp button-comp_reject' : 'button-comp'"  :disabled="isDisabled">
         <slot/>
     </button>
 </template>
@@ -13,6 +13,10 @@
             width: {
                 type: String,
                 default: null
+            },
+            reject: {
+                type: Boolean,
+                default: false
             }
         }
     }
@@ -30,6 +34,9 @@
         padding: 0 20px;
         margin: 0 10px;
         transition: opacity 0.3s;
+        &_reject {
+            background-color: $accent-pink-color;
+        }
         &:hover {
             opacity: 0.6;
         }
