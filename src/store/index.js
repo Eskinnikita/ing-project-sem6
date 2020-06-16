@@ -11,15 +11,16 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        user: sessionStorage.getItem('user-token') || null
+        user: {role: 10} || sessionStorage.getItem('user-token')
     },
     mutations: {
         SET_USER(state, user) {
             state.user = user
-            console.log(user)
         },
         SET_EMPTY_USER(state) {
-            state.user = null
+            state.user = {
+                role: 10
+            }
         },
         SET_TOAST(state, toast) {
             console.log(toast)
@@ -55,7 +56,8 @@ export default new Vuex.Store({
         }
     },
     getters: {
-        isAuthenticated: state => !!state.user,
+        isAuthenticated: state => state.user.role !== 10 && state.user !== '',
+        isNotAuthenticated: state => state.user.role === 10 || state.user === '',
         isAdmin: state => state.user.role === 3,
         isPatient: state => state.user.role === 1,
         isDoctor: state => state.user.role === 2

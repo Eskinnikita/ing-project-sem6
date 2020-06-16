@@ -5,14 +5,10 @@
                 <img class="title__icon" src="../assets/icons/logo.png" alt="логотип">
                 <h2 class="title__text">medi<strong>center</strong></h2>
             </div>
-            <div class="header__user-profile user-profile" v-if="user">
+            <div class="header__user-profile user-profile" v-if="isAuthenticated">
                 <div class="user-profile__name">
-<!--                    {{user.role === 2 ? parseFullName(user.name) : user.name}}-->
                     <dropdown-menu/>
                 </div>
-<!--                <button class="user-profile__button" @click="logout">-->
-<!--                    выйти-->
-<!--                </button>-->
             </div>
             <div class="header__controls" v-else>
                 <button class="underlined-button" @click="openModal('login-modal')">
@@ -31,7 +27,7 @@
 <script>
     import LoginModal from "./Modals/LoginModal"
     import RegModal from "./Modals/RegModal"
-    import {mapState} from 'vuex'
+    import {mapState, mapGetters} from 'vuex'
     import DropdownMenu from "./UI/DropdownMenu"
 
     export default {
@@ -49,7 +45,8 @@
             }
         },
         computed: {
-            ...mapState(['user'])
+            ...mapState(['user']),
+            ...mapGetters(['isAuthenticated'])
         }
     }
 </script>

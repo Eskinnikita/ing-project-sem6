@@ -61,12 +61,12 @@ export const actions = {
             commit('SET_TOAST', {message: e.message, type: 'error'})
         }
     },
-    async approveDoctor({commit}, doctor) {
+    async updateDoctor({commit}, doctor) {
         try {
             console.log(doctor)
             await apiService.update(`${route}`, doctor.id,  doctor)
                 .then(() => {
-                    commit('SET_TOAST', {message: 'Заявка успешно одобрена!', type: 'success'})
+                    commit('SET_TOAST', {message: 'Данные успешно обновлены!', type: 'success'})
                 })
         }
         catch(e) {

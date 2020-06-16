@@ -7,11 +7,13 @@
            <button-comp @click.native="approveDoctor">Принять</button-comp>
            <button-comp @click.native="rejectDoctor" reject>Отклонить</button-comp>
        </div>
+        <not-approved-modal :id="id"/>
     </div>
 </template>
 
 <script>
     import Button from "../UI/Button"
+    import NotApprovedModal from "../Modals/NotApprovedModal"
 
     export default {
         props: {
@@ -24,17 +26,21 @@
             }
         },
         components: {
-            'button-comp': Button
+            'button-comp': Button,
+            'not-approved-modal': NotApprovedModal
         },
         created() {
             console.log(this.id)
         },
         methods: {
             approveDoctor() {
-                this.$store.dispatch('approveDoctor', {id: this.id, isApproved: true})
+                this.$store.dispatch('updateDoctor', {id: this.id, isApproved: true, isSearchable: true})
                 .then(() => {
                     this.$router.push('/doctors-requests')
                 })
+            },
+            rejectDoctor() {
+                this.$modal.show('not-approved-modal');
             }
         }
     }

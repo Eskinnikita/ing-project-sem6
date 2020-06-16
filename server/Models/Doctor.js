@@ -54,6 +54,12 @@ const Doctor = sequelize.define("doctor", {
         },
         isApproved: {
             type: DataTypes.BOOLEAN
+        },
+        isSearchable: {
+            type: DataTypes.BOOLEAN
+        },
+        reasonMessage: {
+            type: DataTypes.TEXT
         }
     }
 );

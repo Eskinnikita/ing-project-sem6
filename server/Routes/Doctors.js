@@ -66,7 +66,7 @@ router.post('/', async (req, res) => {
         const doctors = await Doctor.findAll({
             where: {
                 city: city,
-                isApproved: true,
+                isSearchable: true,
                 id: {
                     [Op.in]: sequelize.literal(`(SELECT DISTINCT ds.doctorId from doctorSpecs ds WHERE ds.specId = ${specId})`),
                 }
@@ -90,7 +90,7 @@ router.get('/all', urlencodedParser, async (req, res) => {
         Spec.belongsToMany(Doctor, {through: DoctorSpecs, foreignKey: 'specId'})
         const doctors = await Doctor.findAll({
             where: {
-                isApproved: 1
+                isSearchable: 1
             },
             include: [
                 {
@@ -121,7 +121,9 @@ router.post('/new-partner', upload.single('photo'), async (req, res) => {
             workType: req.body.workType,
             visitPrice: req.body.visitPrice,
             city: req.body.city,
-            isApproved: req.body.isApproved,
+            isApproved: false,
+            isSearchable: false,
+            reasonMessage: '',
             role: 2
         })
             .then(result => {
@@ -196,9 +198,7 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const doctor = await Doctor.update(
-            {
-                'isApproved': true
-            },
+            req.body,
             {
                 where: {
                     id: req.params.id

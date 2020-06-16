@@ -8,7 +8,7 @@
                 {{isDoctor ? parseFullName(user.name) : user.name}}
             </button>
             <div class="dropdown-menu" slot="dropdown">
-                <a class="dropdown-menu__item" href="#">
+                <a class="dropdown-menu__item" href="#" @click="goToProfile">
                     <font-awesome-icon :icon="['fas', 'user']"/>
                     <span class="dropdown-menu__text">Профиль</span>
                 </a>
@@ -50,6 +50,10 @@
             },
             logout() {
                 this.$store.dispatch('logoutUser')
+            },
+            goToProfile() {
+                const route = this.isDoctor ? '/doctor' : '/user'
+                this.$router.push(`${route}/${this.user.id}`)
             }
         },
         computed: {

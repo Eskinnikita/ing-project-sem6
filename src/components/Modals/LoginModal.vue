@@ -94,11 +94,7 @@
 
 <style lang="scss" scoped>
     .modal-container {
-        height: 100%;
-        width: 100%;
-        @include flex(center, center, column);
-        box-sizing: border-box;
-        padding: 10px 30px;
+        @include modalContainer;
 
         &__underlined-button {
             margin-top: 10px;

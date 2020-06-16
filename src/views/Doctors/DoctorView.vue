@@ -1,5 +1,11 @@
 <template>
     <div class="doctor-view-container">
+        <approved-profile-snippet
+                v-if="isDoctor"
+                :is-approved="doctor.isApproved"
+                :is-searchable="doctor.isSearchable"
+                :reason-message="doctor.reasonMessage"
+        />
         <approve-form v-if="isAdmin && doctor.id && !doctor.isApproved" :name="doctor.name" :id="doctor.id"/>
         <div class="doctor-view">
             <div class="doctor-view__doctor-info doctor-info">
@@ -45,13 +51,16 @@
     import StarRating from 'vue-star-rating'
     import Schedule from "../../components/Schedule"
     import ApproveForm from "../../components/Admin/ApproveForm"
+    import ApprovedProfileSnippet from "../../components/Admin/ApprovedProfileSnippet"
     export default {
         components: {
             StarRating,
             Schedule,
-            ApproveForm
+            ApproveForm,
+            ApprovedProfileSnippet
         },
         created() {
+            console.log(this.user)
             this.$store.dispatch('findDoctorById', this.$route.params.id)
         },
         data() {
@@ -107,8 +116,8 @@
             }
         },
         computed: {
-            ...mapState(['DoctorsStore']),
-            ...mapGetters(['isAdmin']),
+            ...mapState(['DoctorsStore', 'user']),
+            ...mapGetters(['isAdmin', 'isNotAuthenticated', 'isDoctor']),
             doctor() {
                 return this.DoctorsStore.doctor
             }
