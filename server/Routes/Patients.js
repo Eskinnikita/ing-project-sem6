@@ -6,7 +6,12 @@ router.post('/login', async (req, res) => {
     try {
         await Patient.findOne({ where: {email: req.body.email, password: req.body.password}})
             .then(data => {
-                res.status(200).send(data)
+                if(data === null) {
+                    res.status(404).send({'message': 'Ошибка входа!'})
+                }
+                else {
+                    res.status(200).send(data)
+                }
             })
             .catch(err => res.status(404).send(err));
     } catch (e) {

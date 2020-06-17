@@ -162,20 +162,6 @@
             setPhoto() {
                 this.photo = this.$refs.previewImageInput.files[0];
             }
-            // getBase64(file) {
-            //     return new Promise((resolve, reject) => {
-            //         const reader = new FileReader();
-            //         reader.readAsDataURL(file);
-            //         reader.onload = () => resolve(reader.result);
-            //         reader.onerror = error => reject(error);
-            //     });
-            // },
-            // async convertToBase64() {
-            //     const previewImageFile = this.$refs.previewImageInput.files[0];
-            //     this.getBase64(previewImageFile).then(
-            //         data => this.doctor.photo = data
-            //     )
-            // }
         },
         computed: {
             ...

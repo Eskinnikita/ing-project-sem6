@@ -63,7 +63,6 @@ export const actions = {
     },
     async updateDoctor({commit}, doctor) {
         try {
-            console.log(doctor)
             await apiService.update(`${route}`, doctor.id,  doctor)
                 .then(() => {
                     commit('SET_TOAST', {message: 'Данные успешно обновлены!', type: 'success'})

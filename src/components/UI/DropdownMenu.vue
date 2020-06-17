@@ -8,10 +8,12 @@
                 {{isDoctor ? parseFullName(user.name) : user.name}}
             </button>
             <div class="dropdown-menu" slot="dropdown">
-                <a class="dropdown-menu__item" href="#" @click="goToProfile">
-                    <font-awesome-icon :icon="['fas', 'user']"/>
-                    <span class="dropdown-menu__text">Профиль</span>
-                </a>
+               <router-link :to="profileRoute">
+                   <a class="dropdown-menu__item" href="#">
+                       <font-awesome-icon :icon="['fas', 'user']"/>
+                       <span class="dropdown-menu__text">Профиль</span>
+                   </a>
+               </router-link>
                <router-link to="/doctors-requests">
                    <a v-if="isAdmin" class="dropdown-menu__item" href="#">
                        <font-awesome-icon :icon="['fas', 'clipboard-list']"/>
@@ -50,6 +52,9 @@
             },
             logout() {
                 this.$store.dispatch('logoutUser')
+                .then(() => {
+                    this.$router.push('/')
+                })
             },
             goToProfile() {
                 const route = this.isDoctor ? '/doctor' : '/user'
@@ -58,7 +63,10 @@
         },
         computed: {
             ...mapState(['user']),
-            ...mapGetters(['isAdmin', 'isPatient', 'isDoctor'])
+            ...mapGetters(['isAdmin', 'isPatient', 'isDoctor']),
+            profileRoute() {
+                return this.isDoctor ? `/doctor/${this.user.id}` : `/user/${this.user.id}`
+            }
         }
     }
 </script>

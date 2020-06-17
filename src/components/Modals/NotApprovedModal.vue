@@ -37,6 +37,7 @@
                 })
                 .then(() => {
                     this.$modal.hide('not-approved-modal');
+                    this.$router.push('/doctors-requests')
                 })
             }
         }

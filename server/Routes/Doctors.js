@@ -48,7 +48,12 @@ router.post('/login', async (req, res) => {
             }
         })
             .then(data => {
-                res.status(200).send(data)
+                if(data === null) {
+                    res.status(404).send({'message': 'Ошибка входа!'})
+                }
+                else {
+                    res.status(200).send(data)
+                }
             })
             .catch(err => res.status(404).send(err));
     } catch (e) {

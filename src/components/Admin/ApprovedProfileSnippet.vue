@@ -1,19 +1,22 @@
 <template>
-    <div class="profile-status-snippet" :class=" isSearchable ? 'approved' : isApproved ? 'not-approved' : 'waiting-for-approving'">
-        <div v-if="isSearchable && isApproved" class="profile-status-snippet__status_approved status">
+    <div class="profile-status-snippet"
+         :class=" isSearchable ? 'approved' : isApproved ? 'not-approved' : 'waiting-for-approving'">
+        <div v-if="isSearchable && isApproved" class="profile-status-snippet__status profile-status-snippet__status_approved status">
             <div class="status__icon">
                 <font-awesome-icon :icon="['fas', 'check-circle']"/>
             </div>
             <p class="status__text">Профиль проверен и отображается в поиске!</p>
         </div>
-        <div v-else-if="!isSearchable && isApproved" class="profile-status-snippet__status_rejected status">
-            <div class="status__icon">
-                <font-awesome-icon :icon="['fas', 'times-circle']"/>
+        <div v-else-if="!isSearchable && isApproved" class="profile-status-snippet__status profile-status-snippet__status_rejected status">
+            <div class="status__left">
+                <div class="status__icon">
+                    <font-awesome-icon :icon="['fas', 'times-circle']"/>
+                </div>
+                <p v-if="reasonMessage" class="status__text">Заявка отклонена по причине: {{reasonMessage}} </p>
             </div>
-            <p v-if="reasonMessage" class="status__text">Заявка отклонена по причине: {{reasonMessage}} </p>
-            <button-comp reject>Отправить на проверку?</button-comp>
+            <button-comp width="280px" @click.native="sendForApproving" reject>Отправить на проверку?</button-comp>
         </div>
-        <div v-else-if="!isSearchable && !isApproved" class="profile-status-snippet__status_rejected status">
+        <div v-else-if="!isSearchable && !isApproved" class="profile-status-snippet__status profile-status-snippet__status_waiting status">
             <div class="status__icon">
                 <font-awesome-icon :icon="['fas', 'clock']"/>
             </div>
@@ -24,6 +27,7 @@
 
 <script>
     import Button from "../UI/Button"
+    import {mapState} from 'vuex'
 
     export default {
         props: {
@@ -34,12 +38,30 @@
                 required: true
             },
             reasonMessage: {
-                type: String,
-                required: true
+                type: String
             }
         },
         components: {
             'button-comp': Button
+        },
+        created() {
+
+        },
+        methods: {
+            sendForApproving() {
+                this.$store.dispatch('updateDoctor', {
+                    id: this.user.id,
+                    isApproved: false,
+                    isSearchable: false
+                })
+                    .then(() => {
+                        this.isApproved = false
+                        this.isSearchable = false
+                    })
+            }
+        },
+        computed: {
+            ...mapState(['user'])
         }
     }
 </script>
@@ -61,13 +83,22 @@
             }
 
             &_rejected {
-
+                display: flex;
+                justify-content: space-between !important;
+                align-items: center;
             }
         }
     }
 
     .status {
+        width: 100%;
         @include flex(flex-start, center, row);
+
+        &__left {
+            width: 100%;
+            @include flex(flex-start, center, row);
+        }
+
         &__icon {
             font-size: 35px;
             margin-right: 10px;

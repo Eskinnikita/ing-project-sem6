@@ -1,12 +1,13 @@
 <template>
     <div class="doctor-view-container">
         <approved-profile-snippet
-                v-if="isDoctor"
-                :is-approved="doctor.isApproved"
-                :is-searchable="doctor.isSearchable"
+                v-if="displayToSelf"
+                :is-approved="isApproved"
+                :is-searchable="isSearchable"
                 :reason-message="doctor.reasonMessage"
         />
         <approve-form v-if="isAdmin && doctor.id && !doctor.isApproved" :name="doctor.name" :id="doctor.id"/>
+        <user-controls v-if="displayToSelf"/>
         <div class="doctor-view">
             <div class="doctor-view__doctor-info doctor-info">
                 <div class="doctor-info__info">
@@ -52,15 +53,16 @@
     import Schedule from "../../components/Schedule"
     import ApproveForm from "../../components/Admin/ApproveForm"
     import ApprovedProfileSnippet from "../../components/Admin/ApprovedProfileSnippet"
+    import UserControls from "../../components/User/UserControls"
     export default {
         components: {
             StarRating,
             Schedule,
             ApproveForm,
-            ApprovedProfileSnippet
+            ApprovedProfileSnippet,
+            UserControls
         },
         created() {
-            console.log(this.user)
             this.$store.dispatch('findDoctorById', this.$route.params.id)
         },
         data() {
@@ -120,6 +122,20 @@
             ...mapGetters(['isAdmin', 'isNotAuthenticated', 'isDoctor']),
             doctor() {
                 return this.DoctorsStore.doctor
+            },
+            displayToSelf() {
+                return this.isDoctor && +this.$route.params.id === +this.user.id
+            },
+            isApproved() {
+                return this.doctor.isApproved
+            },
+            isSearchable() {
+                return this.doctor.isSearchable
+            }
+        },
+        watch: {
+            "$route.params.id"() {
+                this.$store.dispatch('findDoctorById', this.$route.params.id)
             }
         },
         beforeDestroy() {

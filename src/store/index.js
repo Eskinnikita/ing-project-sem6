@@ -23,13 +23,20 @@ export default new Vuex.Store({
             }
         },
         SET_TOAST(state, toast) {
-            console.log(toast)
             this._vm.$toast.open(
                 {
                     message: toast.message,
                     type: toast.type
                 }
             );
+        },
+        UPDATE_USER(state, user) {
+            console.log(user)
+            for (let key in user) {
+                console.log(key, state.user[key], user[key])
+                state.user[key] = user[key]
+            }
+            console.log(state.user)
         }
     },
     actions: {
@@ -38,8 +45,7 @@ export default new Vuex.Store({
                 let res = null
                 if (!user.isDoctor) {
                     res = await apiService.post('patients/login', user)
-                }
-                else {
+                } else {
                     res = await apiService.post('doctors/login', user)
                 }
                 sessionStorage.setItem('user', JSON.stringify(res.data))
