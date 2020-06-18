@@ -1,12 +1,13 @@
 const Doctor = require('../Models/Doctor')
 const DoctorSpecs = require('../Models/DoctorSpecs')
 const Spec = require('../Models/Spec')
+const Review = require('../Models/Review')
 const express = require('express')
 const router = express.Router()
 const bodyParser = require("body-parser");
 const sequelize = require('sequelize')
 const {Op} = require("sequelize");
-const multer  = require('multer')
+const multer = require('multer')
 
 //files upload config
 const storage = multer.diskStorage({
@@ -20,10 +21,9 @@ const storage = multer.diskStorage({
 
 const fileFilter = (req, file, cb) => {
     //reject file
-    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpeg') {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpeg') {
         cb(null, true)
-    }
-    else {
+    } else {
         cb(null, false)
     }
 }
@@ -41,17 +41,23 @@ const urlencodedParser = bodyParser.urlencoded({extended: false});
 //login doctor in system
 router.post('/login', async (req, res) => {
     try {
+        Doctor.belongsToMany(Spec, {through: DoctorSpecs, foreignKey: 'doctorId'})
+        Spec.belongsToMany(Doctor, {through: DoctorSpecs, foreignKey: 'specId'})
         await Doctor.findOne({
             where: {
                 email: req.body.email,
                 password: req.body.password
-            }
+            },
+            include: [
+                {
+                    model: Spec
+                }
+            ]
         })
             .then(data => {
-                if(data === null) {
+                if (data === null) {
                     res.status(404).send({'message': 'Ошибка входа!'})
-                }
-                else {
+                } else {
                     res.status(200).send(data)
                 }
             })
@@ -176,6 +182,9 @@ router.get('/not-approved', urlencodedParser, async (req, res) => {
 //get doctor by Id
 router.get('/:id', async (req, res) => {
     try {
+        Doctor.hasMany(Review, {foreignKey: 'doctorId'})
+        Review.belongsTo(Doctor, {foreignKey: 'id'})
+
         Doctor.belongsToMany(Spec, {through: DoctorSpecs, foreignKey: 'doctorId'})
         Spec.belongsToMany(Doctor, {through: DoctorSpecs, foreignKey: 'specId'})
         await Doctor.findOne({
@@ -183,6 +192,14 @@ router.get('/:id', async (req, res) => {
                 id: req.params.id
             },
             include: [
+                {
+                    model: Review,
+                    where: {
+                        isDisplayed: true,
+                        isApproved: true
+                    },
+                    required: false
+                },
                 {
                     model: Spec
                 }

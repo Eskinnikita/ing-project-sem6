@@ -5,7 +5,8 @@ const route = 'doctors'
 export const state = {
     doctors: [],
     notApprovedDoctors: [],
-    doctor: {}
+    doctor: {},
+    doctorToUpdate: {}
 }
 export const mutations = {
     SET_DOCTORS(state, doctors) {
@@ -66,6 +67,17 @@ export const actions = {
             await apiService.update(`${route}`, doctor.id,  doctor)
                 .then(() => {
                     commit('SET_TOAST', {message: 'Данные успешно обновлены!', type: 'success'})
+                })
+        }
+        catch(e) {
+            commit('SET_TOAST', {message: e.message, type: 'error'})
+        }
+    },
+    async deleteDoctor({commit}, id) {
+        try {
+            await apiService.update(`${route}`, id)
+                .then(() => {
+                    commit('SET_TOAST', {message: 'Профиль удален!', type: 'error'})
                 })
         }
         catch(e) {

@@ -1,7 +1,7 @@
 <template>
     <header class="header">
         <div class="header__container container">
-            <div class="header__title title" @click="goToMainPage">
+            <div class="header__title title" @click="goToMainPage" style="margin-bottom: 0">
                 <img class="title__icon" src="../assets/icons/logo.png" alt="логотип">
                 <h2 class="title__text">medi<strong>center</strong></h2>
             </div>

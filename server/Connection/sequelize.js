@@ -6,5 +6,14 @@ const sequelize = new Sequelize("std_272", "std_272", "std272mospolytech", {
         timestamps: false
     }
 });
+//
+// const sequelize = new Sequelize("std_272", "root", "root", {
+//     dialect: "mysql",
+//     host: "localhost",
+//     port: "8889",
+//     define: {
+//         timestamps: false
+//     }
+// });
 
 module.exports = sequelize

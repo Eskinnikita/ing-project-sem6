@@ -6,16 +6,22 @@ import createPersistedState from "vuex-persistedstate";
 import * as PatientsStore from "./modules/patients"
 import * as SpecsStore from "./modules/specs"
 import * as DoctorsStore from "./modules/doctors"
+import * as ReviewsStore from "./modules/reviews"
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        user: {role: 10} || sessionStorage.getItem('user-token')
+        user: {role: 10} || sessionStorage.getItem('user-token'),
+        userToUpdate: {},
+        loadingStatus: false
     },
     mutations: {
         SET_USER(state, user) {
             state.user = user
+        },
+        SET_USER_TO_UPDATE(state, user) {
+            state.userToUpdate = user
         },
         SET_EMPTY_USER(state) {
             state.user = {
@@ -37,6 +43,9 @@ export default new Vuex.Store({
                 state.user[key] = user[key]
             }
             console.log(state.user)
+        },
+        SET_LOADER(state, status) {
+            state.loadingStatus = status
         }
     },
     actions: {
@@ -76,6 +85,7 @@ export default new Vuex.Store({
     modules: {
         PatientsStore,
         SpecsStore,
-        DoctorsStore
+        DoctorsStore,
+        ReviewsStore
     }
 })

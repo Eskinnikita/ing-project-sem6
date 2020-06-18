@@ -102,7 +102,7 @@
                 this.$modal.show('login-modal');
             },
             goToDoctorReg() {
-                this.$router.push('/new-doctor')
+                this.$router.push('/doctor-form')
                 .then(() => {this.$modal.hide('reg-modal');})
             }
         }

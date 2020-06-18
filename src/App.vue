@@ -1,24 +1,36 @@
 <template>
     <div id="app">
         <header-comp/>
-        <div class="container">
-            <router-view/>
+        <div class="loading" v-show="loadingStatus">
+            <clip-loader/>
+        </div>
+        <div class="container" v-show="!loadingStatus">
+            <router-view v-cloak/>
         </div>
     </div>
 </template>
 
 <script>
     import Header from "./components/Header"
-
+    import {mapState} from 'vuex'
+    import ClipLoader from 'vue-spinner/src/ClipLoader.vue'
     export default {
         components: {
-            'header-comp': Header
+            'header-comp': Header,
+            ClipLoader
+        },
+        computed: {
+            ...mapState(['loadingStatus'])
         }
     }
 </script>
 
 <style lang="scss">
     @import "./scss/reset.scss";
+
+    [v-cloak] {
+        display: none;
+    }
 
     body {
         position: relative;
@@ -117,6 +129,10 @@
         font-size: .875rem;
         line-height: 1.25rem;
         font-weight: 400;
+    }
+
+    .gray-text {
+        color: #abaaaa;
     }
 
 </style>

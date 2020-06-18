@@ -6,20 +6,24 @@ import VModal from 'vue-js-modal'
 import Vuelidate from 'vuelidate'
 import VueToast from 'vue-toast-notification';
 
-import { library } from '@fortawesome/fontawesome-svg-core'
+import {library} from '@fortawesome/fontawesome-svg-core'
 import {
-  faClock,
-  faUserSecret,
-  faUser,
-  faDoorOpen,
-  faClipboardList,
-  faCheckCircle,
-  faTimesCircle } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+    faComment,
+    faClock,
+    faEdit,
+    faTrashAlt,
+    faUserSecret,
+    faUser,
+    faDoorOpen,
+    faClipboardList,
+    faCheckCircle,
+    faTimesCircle
+} from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
-library.add(faUserSecret, faUser, faDoorOpen, faClipboardList, faCheckCircle, faTimesCircle, faClock)
+library.add(faComment, faTrashAlt, faUserSecret, faUser, faDoorOpen, faClipboardList, faCheckCircle, faTimesCircle, faClock, faEdit)
 
 
 import 'vue-search-select/dist/VueSearchSelect.css'
@@ -33,7 +37,7 @@ Vue.use(Vuelidate)
 Vue.config.productionTip = false
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount('#app')

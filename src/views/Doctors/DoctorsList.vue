@@ -63,8 +63,4 @@
     .doctors-list {
         padding-top: 30px;
     }
-
-    .gray-text {
-        color: #abaaaa;
-    }
 </style>

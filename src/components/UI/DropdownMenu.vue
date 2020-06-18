@@ -20,6 +20,12 @@
                        <span class="dropdown-menu__text">Заявки</span>
                    </a>
                </router-link>
+                <router-link to="/reviews-requests">
+                    <a v-if="isAdmin" class="dropdown-menu__item" href="#">
+                        <font-awesome-icon :icon="['fas', 'comment']"/>
+                        <span class="dropdown-menu__text">Отзывы</span>
+                    </a>
+                </router-link>
                 <a class="dropdown-menu__item" @click="logout" href="#">
                     <font-awesome-icon :icon="['fas', 'door-open']"/>
                     <span class="dropdown-menu__text">Выйти</span>

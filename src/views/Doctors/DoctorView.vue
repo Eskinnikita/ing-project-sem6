@@ -7,7 +7,6 @@
                 :reason-message="doctor.reasonMessage"
         />
         <approve-form v-if="isAdmin && doctor.id && !doctor.isApproved" :name="doctor.name" :id="doctor.id"/>
-        <user-controls v-if="displayToSelf"/>
         <div class="doctor-view">
             <div class="doctor-view__doctor-info doctor-info">
                 <div class="doctor-info__info">
@@ -20,9 +19,10 @@
                                 :star-size="23"
                                 inactive-color="#bebebe"
                                 active-color="#24B9D7"
-                                :rating="doctor.rating"
+                                :rating="doctorRating"
                                 :read-only="true"
                                 :increment="0.01"/>
+                        <user-controls v-if="displayToSelf"/>
                     </div>
                     <div class="doctor-info__desc">
                         <h3 class="doctor-info__name">{{doctor.name}}</h3>
@@ -35,8 +35,26 @@
                     <h2 class="title">Информация о враче</h2>
                     <p>{{doctor.description}}</p>
                 </div>
-                <div class="doctor-info__reviews">
-                    <h2 class="title">Отзывы</h2>
+                <review-modal/>
+                <div class="doctor-info__reviews reviews">
+                    <div class="reviews__header">
+                        <h2 class="title">Отзывы о враче</h2>
+                        <button-comp
+                                v-if="(isAdmin || isPatient) && !displayToSelf"
+                                @click.native="addReview"
+                        >
+                            Оставить отзыв
+                        </button-comp>
+                    </div>
+                    <template v-if="doctor.reviews.length">
+                        <review-snippet
+                                class="doctor-info__review-snippet"
+                                v-for="(review, index) in doctor.reviews"
+                                :review="review"
+                                :key="index"
+                        />
+                    </template>
+                    <span v-else>Никто еще не оценил этого врача... <br/> Станьте превым!</span>
                 </div>
             </div>
             <div class="doctor-view__doctor-schedule doctor-schedule">
@@ -54,13 +72,20 @@
     import ApproveForm from "../../components/Admin/ApproveForm"
     import ApprovedProfileSnippet from "../../components/Admin/ApprovedProfileSnippet"
     import UserControls from "../../components/User/UserControls"
+    import ReviewSnippet from "../../components/Reviews/ReviewSnippet"
+    import Button from "../../components/UI/Button"
+    import ReviewModal from "../../components/Reviews/ReviewModal"
+
     export default {
         components: {
             StarRating,
             Schedule,
             ApproveForm,
             ApprovedProfileSnippet,
-            UserControls
+            UserControls,
+            ReviewSnippet,
+            ReviewModal,
+            'button-comp': Button
         },
         created() {
             this.$store.dispatch('findDoctorById', this.$route.params.id)
@@ -69,6 +94,9 @@
             return {}
         },
         methods: {
+            addReview() {
+                this.$modal.show('review-modal')
+            },
             defineWorkSpace(type) {
                 let workType = ''
                 switch (type) {
@@ -119,7 +147,7 @@
         },
         computed: {
             ...mapState(['DoctorsStore', 'user']),
-            ...mapGetters(['isAdmin', 'isNotAuthenticated', 'isDoctor']),
+            ...mapGetters(['isAdmin', 'isPatient', 'isNotAuthenticated', 'isDoctor']),
             doctor() {
                 return this.DoctorsStore.doctor
             },
@@ -131,6 +159,17 @@
             },
             isSearchable() {
                 return this.doctor.isSearchable
+            },
+            doctorRating() {
+                if (this.DoctorsStore.doctor.reviews.length) {
+                    let starsSum = 0
+                    this.DoctorsStore.doctor.reviews.forEach(el => {
+                        starsSum += +el.rating
+                    })
+                    return starsSum / this.DoctorsStore.doctor.reviews.length
+                } else {
+                    return 5;
+                }
             }
         },
         watch: {
@@ -162,6 +201,11 @@
     .doctor-info {
         padding-right: 40px;
         box-sizing: border-box;
+
+        &__review-snippet {
+            margin-bottom: 20px;
+        }
+
         &__info {
             @include flex(flex-start, flex-start, row);
         }
@@ -183,6 +227,7 @@
         &__photo {
             @include flex(center, center, column);
             padding-left: 20px;
+
             img {
                 width: 130px;
                 height: 130px;
@@ -212,5 +257,12 @@
         background-color: #fff;
         border-radius: $border-radius;
         @include materialShadow;
+    }
+
+    .reviews {
+        &__header {
+            margin-bottom: 10px;
+            @include flex(space-between, center, row);
+        }
     }
 </style>

@@ -8,6 +8,7 @@ const app = express();
 const PatientsRoutes = require('./Routes/Patients')
 const SpecsRoutes = require('./Routes/Specs')
 const DoctorsRoutes = require('./Routes/Doctors')
+const ReviewsRouters = require('./Routes/Reviews')
 
 app.use(bodyParser.urlencoded({
     extended: false
@@ -19,6 +20,7 @@ app.use('/uploads', express.static('uploads'))
 app.use('/patients', PatientsRoutes)
 app.use('/specializations', SpecsRoutes)
 app.use('/doctors', DoctorsRoutes)
+app.use('/reviews', ReviewsRouters)
 
 
 sequelize.sync()

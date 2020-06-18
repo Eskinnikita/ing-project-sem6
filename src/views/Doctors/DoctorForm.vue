@@ -1,6 +1,7 @@
 <template>
     <div class="doctor-registration thin-container">
-        <h2 class="doctor-registration__title">Регистрация врача</h2>
+        <h2 v-if="isNotAuthenticated" class="doctor-registration__title">Регистрация врача</h2>
+        <h2 v-else class="doctor-registration__title">Редактирование профиля</h2>
         <input-comp
                 label="Почта:"
                 id="mail"
@@ -56,7 +57,7 @@
         />
         <div class="input-wrapper">
             <label for="city">Тип работы:</label>
-            <model-select id="workType" v-model="doctor.workType" placeholder="Город" :options="workTypes"/>
+            <model-select id="workType" v-model="doctor.workType" placeholder="Тип работы" :options="workTypes"/>
         </div>
         <input-comp
                 label="Стоимость приема (от):"
@@ -80,7 +81,8 @@
                 placeholder="ул.Пушкина д.23 корп.1"
                 v-model="doctor.clinicAddress"
         />
-        <button-comp @click.native="addDoctor">Оставить заявку</button-comp>
+        <button-comp v-if="isNotAuthenticated" @click.native="addDoctor">Оставить заявку</button-comp>
+        <button-comp v-else @click.native="editDoctor">Сохранить изменения</button-comp>
     </div>
 </template>
 
@@ -90,7 +92,7 @@
     import {ModelSelect} from 'vue-search-select'
     import citiesJson from "../../json/cities.json"
     import Multiselect from 'vue-multiselect'
-    import {mapState} from 'vuex'
+    import {mapState, mapGetters} from 'vuex'
 
     export default {
         components: {
@@ -101,18 +103,20 @@
         },
         created() {
             this.$store.dispatch('getAllSpecs')
-            this.cities = citiesJson.map(el => {
-                return {
-                    text: el.name,
-                    value: el.name
-                }
-            })
+            this.parseCities()
+        },
+        mounted() {
+            if (this.user !== '' && this.isAuthenticated) {
+                this.doctor = this.user
+                this.imageUrl = this.doctor.photo
+                this.doctor.specs = []
+                this.user.specializations.forEach(el => {
+                    this.doctor.specs.push({ id: el.id, name: el.name })
+                })
+            }
         },
         data() {
             return {
-                imageUrl: '',
-                cities: null,
-                photo: null,
                 doctor: {
                     name: '',
                     workType: 1,
@@ -128,6 +132,9 @@
                     isApproved: false,
                     role: 2
                 },
+                imageUrl: '',
+                cities: null,
+                photo: null,
                 workTypes: [
                     {
                         value: 1,
@@ -161,11 +168,26 @@
             },
             setPhoto() {
                 this.photo = this.$refs.previewImageInput.files[0];
+            },
+            parseCities() {
+                this.cities = citiesJson.map(el => {
+                    return {
+                        text: el.name,
+                        value: el.name
+                    }
+                })
+            },
+            editDoctor() {
+                this.doctor.photo = this.user.photo
+                this.$store.dispatch('updateDoctor', this.doctor)
+                .then(() => {
+                    this.$router.push(`/doctor/${this.user.id}`)
+                })
             }
         },
         computed: {
-            ...
-                mapState(['SpecsStore'])
+            ...mapState(['SpecsStore', 'user']),
+            ...mapGetters(['isAuthenticated', 'isNotAuthenticated'])
         }
     }
 </script>

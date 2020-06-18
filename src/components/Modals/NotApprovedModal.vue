@@ -5,7 +5,7 @@
             <div class="input-wrapper">
                 <textarea id="reject-reason" v-model="reasonMessage"/>
             </div>
-            <button-comp width="100%" reject @click.native="confirmRejection">Отклонить</button-comp>
+            <button-comp :is-disabled="isDisabled" width="100%" reject @click.native="confirmRejection">Отклонить</button-comp>
         </div>
     </modal>
 </template>
@@ -39,6 +39,11 @@
                     this.$modal.hide('not-approved-modal');
                     this.$router.push('/doctors-requests')
                 })
+            }
+        },
+        computed: {
+            isDisabled() {
+                return this.reasonMessage.trim() === ""
             }
         }
     }
