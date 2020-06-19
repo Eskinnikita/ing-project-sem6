@@ -38,4 +38,40 @@ router.post('/', async (req, res) => {
     }
 })
 
+router.get('/:id', async (req, res) => {
+    try {
+        await Patient.findOne({
+            where: {
+                id: req.params.id
+            }
+        })
+            .then(result => {
+                res.status(200).send(result)
+            })
+            .catch(e => {
+                res.status(404).send({message: 'Доктор не найден'})
+            })
+    } catch (e) {
+        res.status(500).send({'message': e.message})
+    }
+})
+
+router.put('/:id', async (req, res) => {
+    console.log(req.body)
+    try {
+        const patient = await Patient.update(
+            req.body,
+            {
+                where: {
+                    id: req.params.id
+                }
+            }
+        )
+        res.status(200).send(patient)
+    } catch (e) {
+        console.log(e)
+        res.status(500).send({id: req.params.id, 'message': e.message})
+    }
+})
+
 module.exports = router

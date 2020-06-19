@@ -46,7 +46,7 @@
                             Оставить отзыв
                         </button-comp>
                     </div>
-                    <template v-if="doctor.reviews.length">
+                    <template v-if="doctor.reviews && doctor.reviews.length">
                         <review-snippet
                                 class="doctor-info__review-snippet"
                                 v-for="(review, index) in doctor.reviews"
@@ -161,7 +161,7 @@
                 return this.doctor.isSearchable
             },
             doctorRating() {
-                if (this.DoctorsStore.doctor.reviews.length) {
+                if (this.DoctorsStore.doctor.reviews && this.DoctorsStore.doctor.reviews.length) {
                     let starsSum = 0
                     this.DoctorsStore.doctor.reviews.forEach(el => {
                         starsSum += +el.rating

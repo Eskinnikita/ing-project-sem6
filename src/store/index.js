@@ -68,7 +68,21 @@ export default new Vuex.Store({
             sessionStorage.removeItem('user')
             commit('SET_EMPTY_USER')
             commit('SET_TOAST', {message: 'Вы успешно вышли!', type: 'success'})
-        }
+        },
+        async updateUser({commit, dispatch}, user) {
+            console.log(user)
+            try {
+                await apiService.update(`patients`,user.id, user)
+                dispatch('loginUser', {
+                    email: user.email,
+                    password: user.password,
+                    isDoctor: false
+                })
+                commit('SET_TOAST', {message: 'Данные успешно обновлены!', type: 'success'})
+            } catch (e) {
+                commit('SET_TOAST', {message: 'Ошибка обновления...', type: 'error'})
+            }
+        },
     },
     getters: {
         isAuthenticated: state => state.user.role !== 10 && state.user !== '',

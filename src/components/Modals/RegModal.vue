@@ -31,7 +31,6 @@
             <div class="input-wrapper">
                 <label for="birthDate">Дата рождения:<span class="required-sign">*</span></label>
                 <date-picker  id="birthDate" v-model="user.birthDate"/>
-                <span class="input-block__error" v-if="$v.user.birthDate.$dirty && !$v.user.birthDate.required">Введите дату рождения</span>
             </div>
             <div class="input-wrapper">
                 <label>Выберите пол:</label> <br>

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import DoctorsList from "../views/Doctors/DoctorsList"
 import DoctorView from "../views/Doctors/DoctorView"
+import UserView from "../views/User/UserView"
 import DoctorForm from "../views/Doctors/DoctorForm"
 import DoctorsRequests from "../views/Admin/DoctorsRequests"
 import ReviewsRequests from "../views/Admin/ReviewsRequests"
@@ -13,6 +14,14 @@ Vue.use(VueRouter)
 
 const isAdmin = (to, from, next) => {
     if (store.getters.isAdmin) {
+        next()
+        return
+    }
+    next('/')
+}
+
+const isUser = (to, from, next) => {
+    if (store.getters.isAdmin || store.getters.isPatient) {
         next()
         return
     }
@@ -42,6 +51,12 @@ const routes = [
         path: '/doctor/:id',
         name: 'DoctorView',
         component: DoctorView
+    },
+    {
+        path: '/user/:id',
+        name: 'UserView',
+        component: UserView,
+        beforeEnter: isUser
     },
     {
         path: '/doctor-form',

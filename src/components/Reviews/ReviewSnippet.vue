@@ -23,8 +23,16 @@
             <span>Опубликовано {{date}}</span>
         </div>
         <div v-if="isAdmin && review.isApproved === false" class="review-snippet__controls">
-            <button-comp @click.native="publishReview">Опубликовать</button-comp>
-            <button-comp reject @click.native="rejectReview">Отклонить</button-comp>
+            <button-comp
+                    @click.native="approveReview(true, true, 'publishReview')">
+                Опубликовать
+            </button-comp>
+            <button-comp
+                    reject
+                    @click.native="approveReview(true, false, 'rejectReview')"
+            >
+                Отклонить
+            </button-comp>
         </div>
     </div>
 </template>
@@ -46,15 +54,10 @@
             }
         },
         methods: {
-            publishReview() {
-                this.review.isApproved = true
-                this.review.isDisplayed = true
-                this.$store.dispatch('publishReview', this.review)
-            },
-            rejectReview() {
-                this.review.isApproved = true
-                this.review.isDisplayed = false
-                this.$store.dispatch('rejectReview', this.review)
+            approveReview(isApproved, isDisplayed, dispatchMethod) {
+                this.review.isApproved = isApproved
+                this.review.isDisplayed = isDisplayed
+                this.$store.dispatch(dispatchMethod, this.review)
             }
 
         },
