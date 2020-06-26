@@ -18,13 +18,15 @@ import {
     faDoorOpen,
     faClipboardList,
     faCheckCircle,
-    faTimesCircle
+    faTimesCircle,
+    faArrowLeft,
+    faArrowRight
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
-library.add(faComment, faTrashAlt, faUserSecret, faUser, faDoorOpen, faClipboardList, faCheckCircle, faTimesCircle, faClock, faEdit)
+library.add(faComment, faTrashAlt, faUserSecret, faUser, faDoorOpen, faClipboardList, faCheckCircle, faTimesCircle, faClock, faEdit, faArrowLeft, faArrowRight)
 
 
 import 'vue-search-select/dist/VueSearchSelect.css'

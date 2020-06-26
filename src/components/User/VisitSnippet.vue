@@ -1,11 +1,18 @@
 <template>
     <div class="visit-snippet">
-
+        {{visit.patientName}}
     </div>
 </template>
 
 <script>
-    export default {}
+    export default {
+        props: {
+            visit: {
+                type: Object,
+                required: true
+            }
+        }
+    }
 </script>
 
 <style lang="scss" scoped>

@@ -7,6 +7,7 @@ import UserView from "../views/User/UserView"
 import DoctorForm from "../views/Doctors/DoctorForm"
 import DoctorsRequests from "../views/Admin/DoctorsRequests"
 import ReviewsRequests from "../views/Admin/ReviewsRequests"
+import ScheduleEdit from "../views/Doctors/ScheduleEdit"
 import Visits from "../views/User/Visits"
 import NotFound from "../views/NotFound"
 import store from '../store/index'
@@ -37,13 +38,13 @@ const isPatientOrDoctor = (to, from, next) => {
     next('/')
 }
 
-// const isDoctor = (to, from, next) => {
-//     if (store.getters.isDoctor) {
-//         next()
-//         return
-//     }
-//     next('/')
-// }
+const isDoctor = (to, from, next) => {
+    if (store.getters.isDoctor) {
+        next()
+        return
+    }
+    next('/')
+}
 //
 // const isPatient = (to, from, next) => {
 //     if (store.getters.isPatient) {
@@ -88,6 +89,11 @@ const routes = [
         meta: {
             title: 'Страница не найдена'
         }
+    },
+    {
+        path: '/schedule-edit',
+        component: ScheduleEdit,
+        beforeEnter: isDoctor
     },
     {
         path: '/doctors-requests',

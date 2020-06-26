@@ -29,4 +29,44 @@ router.post('/', async (req, res) => {
     }
 })
 
+router.post('/all-visits', async (req, res) => {
+    try {
+        VisitSlot.hasOne(Visit, {foreignKey: 'slotId'})
+        Visit.belongsTo(VisitSlot, {foreignKey: 'id'})
+        const id = +req.body.id
+        const role = +req.body.role
+        let visits = null
+        if (role === 2) {
+            console.log('БЛЯТЬ')
+            visits = await Visit.findAll({
+                where: {
+                    doctorId: id
+                },
+                include: [
+                    {
+                        model: VisitSlot
+                    }
+                ]
+            })
+        } else if (role === 1) {
+            console.log('СУКА')
+            visits = await Visit.findAll({
+                where: {
+                    patientId: id
+                },
+                include: [
+                    {
+                        model: VisitSlot
+                    }
+                ]
+            })
+        }
+        res.status(200).send(visits)
+    } catch (e) {
+        console.log(e)
+        res.status(500).send({'message': 'Ошибка сервера'})
+    }
+})
+
+
 module.exports = router

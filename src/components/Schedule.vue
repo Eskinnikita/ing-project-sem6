@@ -1,20 +1,35 @@
 <template>
     <div class="schedule">
-        <div class="schedule__col" v-for="(day, index) in doctorSchedule" :key="index">
-            <div class="schedule__days days">
-                <button class="days__button">{{day.date | moment('dddd')}},<br>{{day.date | moment("D MMMM")}}</button>
+        <div class="schedule__cols">
+            <div class="schedule__col"
+                 v-for="(day, index) in doctorSchedule"
+                 :key="index"
+                 :style="{'display': index <= shownIndex && (index > (shownIndex - limit)) ? 'block' : 'none'}"
+            >
+                <div class="schedule__days days">
+                    <button class="days__button">{{day.date | moment('dddd')}},<br>{{day.date | moment("D MMMM")}}
+                    </button>
+                </div>
+                <div class="schedule__hours hours">
+                    <button
+                            @click="openVisitModal(hour)"
+                            class="hours__button"
+                            :disabled="checkHour(day.date, hour.visitTime, hour.isAvailable)"
+                            v-for="(hour, index) in day.hours"
+                            :key="index"
+                    >
+                        {{removeSeconds(hour.visitTime)}}
+                    </button>
+                </div>
             </div>
-            <div class="schedule__hours hours">
-                <button
-                        @click="openVisitModal(hour)"
-                        class="hours__button"
-                        :disabled="checkHour(day.date, hour.visitTime, hour.isAvailable)"
-                        v-for="(hour, index) in day.hours"
-                        :key="index"
-                >
-                    {{removeSeconds(hour.visitTime)}}
-                </button>
-            </div>
+        </div>
+        <div class="schedule__controls">
+            <button :disabled="shownIndex === 2" @click="goToPrevDays">
+                <font-awesome-icon :icon="['fas', 'arrow-left']"/>
+            </button>
+            <button :disabled="shownIndex > doctorSchedule.length" @click="goToNextDays">
+                <font-awesome-icon :icon="['fas', 'arrow-right']"/>
+            </button>
         </div>
         <visit-modal v-if="visitSlot" :visit-slot="visitSlot" :doctor-id="doctorId"/>
     </div>
@@ -45,7 +60,9 @@
         data() {
             return {
                 doctorSchedule: [],
-                visitSlot: {}
+                visitSlot: {},
+                shownIndex: 2,
+                limit: 3
             }
         },
         methods: {
@@ -80,7 +97,13 @@
             checkHour(date, time, isAvailable) {
                 const currentDate = this.$moment(new Date()).format("YYYY-MM-DD");
                 let currentTime = this.$moment(new Date()).format("HH:mm:ss");
-                return date === currentDate  && time < currentTime || !isAvailable
+                return date === currentDate && time < currentTime || !isAvailable
+            },
+            goToNextDays() {
+                this.shownIndex += this.limit
+            },
+            goToPrevDays() {
+                this.shownIndex -= this.limit
             }
         },
     }
@@ -92,12 +115,39 @@
         padding: 10px;
         box-sizing: border-box;
         min-width: 390px;
-        @include flex(flex-start, flex-start, row);
+
+        &__cols {
+            @include flex(flex-start, flex-start, row);
+        }
 
         &__col {
             padding: 0 10px;
             width: 33.3%;
             box-sizing: border-box;
+        }
+
+        &__controls {
+            padding-top: 10px;
+            width: 100%;
+            @include flex(space-between, center, row);
+
+            button {
+                cursor: pointer;
+                border: none;
+                background: none;
+                font-size: 30px;
+                color: $accent-blue-color;
+                transition: transform 0.3s;
+
+                &:hover {
+                    transform: scale(1.1);
+                }
+
+                &:disabled, &[disabled] {
+                    opacity: 0.4;
+                    cursor: default;
+                }
+            }
         }
     }
 

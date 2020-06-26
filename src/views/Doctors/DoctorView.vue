@@ -156,7 +156,7 @@
                 return exp + " " + txt;
             },
             goToScheduleEdit() {
-
+                this.$router.push('/schedule-edit')
             }
         },
         computed: {
@@ -267,7 +267,7 @@
     }
 
     .doctor-schedule {
-        padding: 20px 20px 30px 20px;
+        padding: 20px;
         box-sizing: border-box;
         height: auto;
         width: 430px;

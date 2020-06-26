@@ -41,7 +41,7 @@
         },
         mounted() {
             this.visit.patientName += this.user.name
-            this.visit.phoneNumber += this.user.phoneNumber
+            this.visit.phoneNumber += this.user.phoneNumber ? this.user.phoneNumber : ''
         },
         data() {
             return {
