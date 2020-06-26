@@ -14,6 +14,12 @@
                        <span class="dropdown-menu__text">Профиль</span>
                    </a>
                </router-link>
+                <router-link to="/visits">
+                    <a v-if="isDoctor || isPatient" class="dropdown-menu__item" href="#">
+                        <font-awesome-icon :icon="['fas', 'clipboard-list']"/>
+                        <span class="dropdown-menu__text">Посещения</span>
+                    </a>
+                </router-link>
                <router-link to="/doctors-requests">
                    <a v-if="isAdmin" class="dropdown-menu__item" href="#">
                        <font-awesome-icon :icon="['fas', 'clipboard-list']"/>

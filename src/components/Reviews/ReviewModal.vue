@@ -34,7 +34,6 @@
             'button-comp': Button
         },
         created() {
-            this.review.doctorId = this.DoctorsStore.doctor.id
             this.review.patientId = this.user.id
             this.review.reviewerName = this.user.name
         },
@@ -54,6 +53,7 @@
         },
         methods: {
             sendReview() {
+                this.review.doctorId = this.DoctorsStore.doctor.id
                 this.$store.dispatch('addReview', this.review)
                     .then(() => {
                         this.$modal.hide('review-modal')

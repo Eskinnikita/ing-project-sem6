@@ -57,9 +57,15 @@
                     <span v-else>Никто еще не оценил этого врача... <br/> Станьте превым!</span>
                 </div>
             </div>
-            <div class="doctor-view__doctor-schedule doctor-schedule">
-                <h2 class="title">Расписание врача</h2>
-                <schedule/>
+            <div class="doctor-view__doctor-schedule doctor-schedule" v-if="doctor.visitSlots && doctor.visitSlots.length">
+                <div class="doctor-schedule__header">
+                    <h2 class="title">Расписание врача</h2>
+                    <button-comp
+                            v-if="isDoctor"
+                            @click.native="goToScheduleEdit"
+                    ><font-awesome-icon :icon="['fas', 'edit']"/></button-comp>
+                </div>
+                <schedule v-if="doctor.visitSlots" :doctor-id="doctor.id" :schedule="doctor.visitSlots"/>
             </div>
         </div>
     </div>
@@ -89,9 +95,14 @@
         },
         created() {
             this.$store.dispatch('findDoctorById', this.$route.params.id)
+
+        },
+        mounted() {
+
         },
         data() {
-            return {}
+            return {
+            }
         },
         methods: {
             addReview() {
@@ -143,6 +154,9 @@
                     }
                 }
                 return exp + " " + txt;
+            },
+            goToScheduleEdit() {
+
             }
         },
         computed: {
@@ -150,6 +164,9 @@
             ...mapGetters(['isAdmin', 'isPatient', 'isNotAuthenticated', 'isDoctor']),
             doctor() {
                 return this.DoctorsStore.doctor
+            },
+            doctorId() {
+                return this.DoctorsStore.doctor.id
             },
             displayToSelf() {
                 return this.isDoctor && +this.$route.params.id === +this.user.id
@@ -257,6 +274,11 @@
         background-color: #fff;
         border-radius: $border-radius;
         @include materialShadow;
+
+        &__header {
+            margin-bottom: 10px;
+            @include flex(space-between, center, row);
+        }
     }
 
     .reviews {

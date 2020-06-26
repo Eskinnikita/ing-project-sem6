@@ -40,7 +40,7 @@ export const actions = {
         try {
             await apiService.update(`${route}`, review.id, review)
             commit('DELETE_REVIEW', review.id)
-            commit('SET_TOAST', {message: 'Комментарий опубликован!', type: 'success'})
+            commit('SET_TOAST', {message: 'Отзыв опубликован!', type: 'success'})
         } catch (e) {
             commit('SET_TOAST', {message: e.message, type: 'error'})
         }
@@ -49,7 +49,7 @@ export const actions = {
         try {
             await apiService.update(`${route}`, review.id, review)
             commit('DELETE_REVIEW', review.id)
-            commit('SET_TOAST', {message: 'Коментарий отклонен!', type: 'error'})
+            commit('SET_TOAST', {message: 'Отзыв отклонен!', type: 'error'})
         } catch (e) {
             commit('SET_TOAST', {message: e.message, type: 'error'})
         }

@@ -5,6 +5,7 @@ import store from './store'
 import VModal from 'vue-js-modal'
 import Vuelidate from 'vuelidate'
 import VueToast from 'vue-toast-notification';
+const moment = require('moment')
 
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {
@@ -28,11 +29,15 @@ library.add(faComment, faTrashAlt, faUserSecret, faUser, faDoorOpen, faClipboard
 
 import 'vue-search-select/dist/VueSearchSelect.css'
 import 'vue-toast-notification/dist/theme-default.css';
-
+require('moment/locale/ru')
 
 Vue.use(VueToast);
 Vue.use(VModal)
 Vue.use(Vuelidate)
+
+Vue.use(require('vue-moment'), {
+    moment
+})
 
 Vue.config.productionTip = false
 

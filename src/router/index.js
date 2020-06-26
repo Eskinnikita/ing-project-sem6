@@ -7,6 +7,7 @@ import UserView from "../views/User/UserView"
 import DoctorForm from "../views/Doctors/DoctorForm"
 import DoctorsRequests from "../views/Admin/DoctorsRequests"
 import ReviewsRequests from "../views/Admin/ReviewsRequests"
+import Visits from "../views/User/Visits"
 import NotFound from "../views/NotFound"
 import store from '../store/index'
 
@@ -20,8 +21,16 @@ const isAdmin = (to, from, next) => {
     next('/')
 }
 
-const isUser = (to, from, next) => {
+const isAdminOrPatient = (to, from, next) => {
     if (store.getters.isAdmin || store.getters.isPatient) {
+        next()
+        return
+    }
+    next('/')
+}
+
+const isPatientOrDoctor = (to, from, next) => {
+    if (store.getters.isDoctor || store.getters.isPatient) {
         next()
         return
     }
@@ -35,6 +44,15 @@ const isUser = (to, from, next) => {
 //     }
 //     next('/')
 // }
+//
+// const isPatient = (to, from, next) => {
+//     if (store.getters.isPatient) {
+//         next()
+//         return
+//     }
+//     next('/')
+// }
+
 
 const routes = [
     {
@@ -56,7 +74,7 @@ const routes = [
         path: '/user/:id',
         name: 'UserView',
         component: UserView,
-        beforeEnter: isUser
+        beforeEnter: isAdminOrPatient
     },
     {
         path: '/doctor-form',
@@ -82,13 +100,17 @@ const routes = [
         beforeEnter: isAdmin
     },
     {
+        path: '/visits',
+        component: Visits,
+        beforeEnter: isPatientOrDoctor
+    },
+    {
         path: '*',
         redirect: '/404',
         meta: {
             title: 'Страница не найдена'
         }
     }
-
 ]
 
 const router = new VueRouter({

@@ -1,33 +1,37 @@
 <template>
     <!--    <div class="doctor-snippet" v-if="doctor.id !== user.id">-->
     <div class="doctor-snippet">
-        <div class="doctor-snippet__photo">
-            <img :src="`http://localhost:8082/${doctor.photo}`" class="doctor-snippet__doctor" :alt="doctor.name"/>
-            <star-rating
-                    :show-rating="false"
-                    :border-width="0"
-                    border-color="#24B9D7"
-                    :star-size="23"
-                    inactive-color="#bebebe"
-                    active-color="#24B9D7"
-                    :rating="doctor.rating"
-                    :read-only="true"
-                    :increment="0.01"
-            />
-        </div>
-        <div class="doctor-snippet__doctor-info doctor-info">
+        <div class="doctor-snippet__left">
+            <div class="doctor-snippet__photo">
+                <img :src="`http://localhost:8082/${doctor.photo}`" class="doctor-snippet__doctor" :alt="doctor.name"/>
+                <star-rating
+                        :show-rating="false"
+                        :border-width="0"
+                        border-color="#24B9D7"
+                        :star-size="23"
+                        inactive-color="#bebebe"
+                        active-color="#24B9D7"
+                        :rating="doctor.rating"
+                        :read-only="true"
+                        :increment="0.01"
+                />
+            </div>
+            <div class="doctor-snippet__doctor-info doctor-info">
             <span class="doctor-info__specs">
                 {{parseSpecs(doctor.specializations)}}
             </span>
-            <h3 @click="goToDoctorDetails" class="doctor-info__name">
-                {{doctor.name}}
-            </h3>
-            <div class="doctor-info__work-time">
-                Стаж {{expToStr(doctor.experience)}}
+                <h3 @click="goToDoctorDetails" class="doctor-info__name">
+                    {{doctor.name}}
+                </h3>
+                <div class="doctor-info__work-time">
+                    Стаж {{expToStr(doctor.experience)}}
+                </div>
+                <div class="doctor-info__price">
+                    <span> {{defineWorkSpace(doctor.workType)}} <strong> {{doctor.visitPrice}} &#8381; </strong></span>
+                </div>
             </div>
-            <div class="doctor-info__price">
-                <span> {{defineWorkSpace(doctor.workType)}} <strong> {{doctor.visitPrice}} &#8381; </strong></span>
-            </div>
+        </div>
+        <div class="doctor-snippet__right">
             <div class="doctor-info__phone-title">
                 <div>Телефон для записи</div>
             </div>
@@ -121,14 +125,24 @@
 
 <style lang="scss" scoped>
     .doctor-snippet {
-        @include flex(flex-start, flex-start, row);
+        @include flex(space-between, flex-start, row);
         width: 100%;
-        height: 300px;
+        height: 180px;
         background-color: #fff;
         border-radius: $border-radius;
         margin-bottom: 30px;
         padding: 20px 30px;
         box-sizing: border-box;
+
+        &__left {
+            @include flex(flex-start, flex-start, row);
+            width: calc(100% - 305px);
+        }
+
+        &__right {
+            text-align: right;
+            width: 300px;
+        }
 
         &__doctor {
             width: 100px;
@@ -171,7 +185,7 @@
         &__phone-title {
             font-size: 13px;
             color: $dark-gray;
-            margin: 30px 0 7px 0;
+            margin: 0 0 7px 0;
         }
 
         &__phone {
@@ -179,6 +193,12 @@
             text-decoration: none;
             color: #000;
             font-size: 20px;
+            transition: color 0.1s;
+
+            &:hover {
+                text-decoration: underline;
+                color: $accent-blue-color;
+            }
         }
 
         &__address {

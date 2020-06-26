@@ -7,6 +7,7 @@ import * as PatientsStore from "./modules/patients"
 import * as SpecsStore from "./modules/specs"
 import * as DoctorsStore from "./modules/doctors"
 import * as ReviewsStore from "./modules/reviews"
+import * as VisitsStore from "./modules/visits"
 
 Vue.use(Vuex)
 
@@ -100,6 +101,7 @@ export default new Vuex.Store({
         PatientsStore,
         SpecsStore,
         DoctorsStore,
-        ReviewsStore
+        ReviewsStore,
+        VisitsStore
     }
 })

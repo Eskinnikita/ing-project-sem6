@@ -1,5 +1,6 @@
 const Doctor = require('../Models/Doctor')
 const DoctorSpecs = require('../Models/DoctorSpecs')
+const VisitSlots = require('../Models/VisitSlot')
 const Spec = require('../Models/Spec')
 const Review = require('../Models/Review')
 const express = require('express')
@@ -185,6 +186,9 @@ router.get('/:id', async (req, res) => {
         Doctor.hasMany(Review, {foreignKey: 'doctorId'})
         Review.belongsTo(Doctor, {foreignKey: 'id'})
 
+        Doctor.hasMany(VisitSlots, {foreignKey: 'doctorId'})
+        VisitSlots.belongsTo(Doctor, {foreignKey: 'id'})
+
         Doctor.belongsToMany(Spec, {through: DoctorSpecs, foreignKey: 'doctorId'})
         Spec.belongsToMany(Doctor, {through: DoctorSpecs, foreignKey: 'specId'})
         await Doctor.findOne({
@@ -202,6 +206,13 @@ router.get('/:id', async (req, res) => {
                 },
                 {
                     model: Spec
+                },
+                {
+                    model: VisitSlots,
+                    where: {
+                        doctorId: req.params.id
+                    },
+                    required: false
                 }
             ]
         })
