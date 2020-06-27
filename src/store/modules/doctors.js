@@ -75,7 +75,7 @@ export const actions = {
     },
     async deleteDoctor({commit}, id) {
         try {
-            await apiService.update(`${route}`, id)
+            await apiService.delete(`${route}`, id)
                 .then(() => {
                     commit('SET_TOAST', {message: 'Профиль удален!', type: 'error'})
                 })

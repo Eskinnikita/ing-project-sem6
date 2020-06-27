@@ -1,5 +1,9 @@
 const Visit = require('../Models/Visit')
 const VisitSlot = require('../Models/VisitSlot')
+const Doctor = require('../Models/Doctor')
+const Spec = require('../Models/Spec')
+const DoctorSpecs = require('../Models/DoctorSpecs')
+const Patient = require('../Models/Patient')
 const express = require('express')
 const router = express.Router()
 
@@ -31,32 +35,70 @@ router.post('/', async (req, res) => {
 
 router.post('/all-visits', async (req, res) => {
     try {
-        VisitSlot.hasOne(Visit, {foreignKey: 'slotId'})
-        Visit.belongsTo(VisitSlot, {foreignKey: 'id'})
+        Doctor.hasMany(Visit, {foreignKey: 'id'})
+        Visit.belongsTo(Doctor, {foreignKey: 'doctorId'})
+
+        Patient.hasMany(Visit, {foreignKey: 'id'})
+        Visit.belongsTo(Patient, {foreignKey: 'patientId'})
+
+        Doctor.belongsToMany(Spec, {through: DoctorSpecs, foreignKey: 'doctorId'})
+        Spec.belongsToMany(Doctor, {through: DoctorSpecs, foreignKey: 'specId'})
+
+        VisitSlot.hasOne(Visit, {foreignKey: 'id'})
+        Visit.belongsTo(VisitSlot, {foreignKey: 'slotId'})
+
         const id = +req.body.id
         const role = +req.body.role
         let visits = null
         if (role === 2) {
-            console.log('БЛЯТЬ')
             visits = await Visit.findAll({
                 where: {
                     doctorId: id
                 },
                 include: [
                     {
-                        model: VisitSlot
+                        model: VisitSlot,
+                        attributes: ['visitTime', 'visitDate']
+                    },
+                    {
+                        model: Patient,
+                        attributes: ['name']
+                    },
+                    {
+                        model: Doctor,
+                        attributes: ['name'],
+                        include: [
+                            {
+                                model: Spec,
+                                attributes: ['name']
+                            }
+                        ]
                     }
                 ]
             })
         } else if (role === 1) {
-            console.log('СУКА')
             visits = await Visit.findAll({
                 where: {
                     patientId: id
                 },
                 include: [
                     {
-                        model: VisitSlot
+                        model: VisitSlot,
+                        attributes: ['visitTime', 'visitDate']
+                    },
+                    {
+                        model: Patient,
+                        attributes: ['name']
+                    },
+                    {
+                        model: Doctor,
+                        attributes: ['name'],
+                        include: [
+                            {
+                                model: Spec,
+                                attributes: ['name']
+                            }
+                        ]
                     }
                 ]
             })

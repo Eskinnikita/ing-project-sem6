@@ -1,6 +1,7 @@
 const Doctor = require('../Models/Doctor')
 const DoctorSpecs = require('../Models/DoctorSpecs')
 const VisitSlots = require('../Models/VisitSlot')
+const Visit = require('../Models/Visit')
 const Spec = require('../Models/Spec')
 const Review = require('../Models/Review')
 const express = require('express')
@@ -240,7 +241,39 @@ router.put('/:id', async (req, res) => {
         )
         res.status(200).send(doctor)
     } catch (e) {
-        console.log(e)
+        res.status(500).send({id: req.params.id, 'message': e.message})
+    }
+})
+
+router.delete('/:id', async(req,res) => {
+    try {
+        await Doctor.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+        await Visit.destroy({
+            where: {
+                doctorId: req.params.id
+            }
+        })
+        await VisitSlots.destroy({
+            where: {
+                doctorId: req.params.id
+            }
+        })
+        await DoctorSpecs.destroy({
+            where: {
+                doctorId: req.params.id
+            }
+        })
+        await Review.destroy({
+            where: {
+                doctorId: req.params.id
+            }
+        })
+        res.status(200).send({'message': 'Профиль удален!'})
+    } catch (e) {
         res.status(500).send({id: req.params.id, 'message': e.message})
     }
 })

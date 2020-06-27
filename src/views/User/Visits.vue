@@ -1,14 +1,21 @@
 <template>
     <div class="visits">
-        <h2 class="title" v-if="isPatient">Мои записи</h2>
-        <h2 class="title" v-if="isDoctor">Мои пациенты</h2>
+        <h2 class="visits__title title" v-if="isPatient">Мои записи</h2>
+        <h2 class="visits__title title" v-if="isDoctor">Мои пациенты</h2>
         <div class="visits__visits-list">
-            <visit-snippet
-                    v-for="(visit, index) in VisitsStore.visits"
-                    :key="index"
-                    :visit="visit"
-            />
+            <div class="visits__visit-item" v-for="(day, index) in parsedVisits" :key="index">
+                <div class="visits__date">
+                    <h2>{{checkToday(day.date) | moment("D MMMM")}}</h2>
+                    <hr>
+                </div>
+                <visit-snippet
+                        v-for="(visit, index) in day.visits"
+                        :key="index"
+                        :visit="visit"
+                />
+            </div>
         </div>
+        <confirm-modal>Отменить запись?</confirm-modal>
     </div>
 </template>
 
@@ -16,26 +23,99 @@
     import VisitSnippet from "../../components/User/VisitSnippet"
     import {mapGetters} from 'vuex'
     import {mapState} from 'vuex'
+    import ConfirmModal from "../../components/Modals/ConfirmModal"
+
     export default {
         components: {
-            'visit-snippet': VisitSnippet
+            'visit-snippet': VisitSnippet,
+            'confirm-modal': ConfirmModal
         },
         mounted() {
-            if(this.user) {
-                this.$store.dispatch('getUserVisits', {id: this.user.id, role: this.user.role})
+            this.$store.dispatch('getUserVisits', {id: this.user.id, role: this.user.role})
+                .then(() => {
+                    this.parseVisits()
+                })
+        },
+        data() {
+            return {
+                parsedVisits: []
+            }
+        },
+        methods: {
+            checkToday(day) {
+                const currentDate = this.$moment(new Date()).format("YYYY-MM-DD");
+                return currentDate === day ? 'Сегодня' : day
+            },
+            parseVisits() {
+                this.VisitsStore.visits.forEach(visit => {
+                    if (this.parsedVisits.length === 0) {
+                        this.parsedVisits.push({
+                            date: visit.visitSlot.visitDate,
+                            visits: [visit]
+                        })
+                    } else {
+                        let existingDate = this.parsedVisits.find(el => el.date === visit.visitSlot.visitDate)
+                        if (existingDate) {
+                            existingDate.visits.push(visit)
+                        } else {
+                            this.parsedVisits.push({
+                                date: visit.visitSlot.visitDate,
+                                visits: [visit]
+                            })
+                        }
+                    }
+                })
+                this.parsedVisits.forEach(el => {
+                    el.visits.sort(this.compare)
+                })
+            },
+            compare(a, b) {
+                if (a.visitSlot.visitTime < b.visitSlot.visitTime) {
+                    return -1;
+                }
+                if (a.visitSlot.visitTime > b.visitSlot.visitTime) {
+                    return 1;
+                }
+                return 0;
             }
         },
         computed: {
-            ...mapGetters(['isDoctor', 'isPatient']),
-            ...mapState(['user', 'VisitsStore'])
+            ...
+                mapGetters(['isDoctor', 'isPatient']),
+            ...
+                mapState(['user', 'VisitsStore'])
         }
     }
 </script>
 
 <style lang="scss" scoped>
     .visits {
+        &__title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
         &__visits-list {
             margin-top: 20px;
+        }
+
+        &__visit-item {
+            margin-bottom: 100px;
+        }
+
+        &__date {
+            @include flex(space-between, center, row);
+            margin-bottom: 20px;
+
+            h2 {
+                padding-right: 10px;
+                min-width: 170px;
+            }
+
+            hr {
+                width: 100%;
+                color: rgba(0, 0, 0, 0.4);
+            }
         }
     }
 </style>
