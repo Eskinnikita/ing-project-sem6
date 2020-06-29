@@ -8,12 +8,13 @@ import * as SpecsStore from "./modules/specs"
 import * as DoctorsStore from "./modules/doctors"
 import * as ReviewsStore from "./modules/reviews"
 import * as VisitsStore from "./modules/visits"
+import * as DailySchedulesStore from "./modules/dailySchedule"
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        user: {role: 10} || sessionStorage.getItem('user-token'),
+        user: {role: 10},
         userToUpdate: {},
         loadingStatus: false
     },
@@ -47,6 +48,9 @@ export default new Vuex.Store({
         },
         SET_LOADER(state, status) {
             state.loadingStatus = status
+        },
+        SET_WORKING_DAYS(state, days) {
+            state.user.workingDays = days
         }
     },
     actions: {
@@ -58,7 +62,7 @@ export default new Vuex.Store({
                 } else {
                     res = await apiService.post('doctors/login', user)
                 }
-                sessionStorage.setItem('user', JSON.stringify(res.data))
+                localStorage.setItem('user', JSON.stringify(res.data))
                 commit('SET_USER', res.data)
                 commit('SET_TOAST', {message: 'Вы успешно вошли!', type: 'success'})
             } catch (e) {
@@ -66,14 +70,14 @@ export default new Vuex.Store({
             }
         },
         async logoutUser({commit}) {
-            sessionStorage.removeItem('user')
+            localStorage.removeItem('user')
             commit('SET_EMPTY_USER')
             commit('SET_TOAST', {message: 'Вы успешно вышли!', type: 'success'})
         },
         async updateUser({commit, dispatch}, user) {
             console.log(user)
             try {
-                await apiService.update(`patients`,user.id, user)
+                await apiService.update(`patients`, user.id, user)
                 dispatch('loginUser', {
                     email: user.email,
                     password: user.password,
@@ -102,6 +106,7 @@ export default new Vuex.Store({
         SpecsStore,
         DoctorsStore,
         ReviewsStore,
-        VisitsStore
+        VisitsStore,
+        DailySchedulesStore
     }
 })

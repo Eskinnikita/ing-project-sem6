@@ -57,15 +57,22 @@
                     <span v-else>Никто еще не оценил этого врача... <br/> Станьте превым!</span>
                 </div>
             </div>
-            <div class="doctor-view__doctor-schedule doctor-schedule" v-if="doctor.visitSlots && doctor.visitSlots.length">
-                <div class="doctor-schedule__header">
+            <div class="doctor-view__doctor-schedule doctor-schedule">
+                <template v-if="hasVisitSlots">
+                    <div class="doctor-schedule__header">
+                        <h2 class="title">Расписание врача</h2>
+                        <button-comp
+                                v-if="isDoctor && displayToSelf"
+                                @click.native="goToScheduleEdit"
+                        ><font-awesome-icon :icon="['fas', 'edit']"/></button-comp>
+                    </div>
+                    <schedule :doctor-id="doctor.id" :schedule="visitsSlots"/>
+                </template>
+                <template v-else>
                     <h2 class="title">Расписание врача</h2>
-                    <button-comp
-                            v-if="isDoctor"
-                            @click.native="goToScheduleEdit"
-                    ><font-awesome-icon :icon="['fas', 'edit']"/></button-comp>
-                </div>
-                <schedule v-if="doctor.visitSlots" :doctor-id="doctor.id" :schedule="doctor.visitSlots"/>
+                    <p>Похоже, вы еще не настроили ваше расписание</p>
+                    <button-comp class="doctor-schedule__edit-button_long" width="100%" @click.native="goToScheduleEdit">Перейти к настройке</button-comp>
+                </template>
             </div>
         </div>
     </div>
@@ -187,6 +194,12 @@
                 } else {
                     return 5;
                 }
+            },
+            hasVisitSlots() {
+                return this.doctor && this.doctor.visitSlots && this.doctor.visitSlots.length
+            },
+            visitsSlots() {
+                return this.doctor.visitSlots
             }
         },
         watch: {
@@ -203,7 +216,7 @@
 <style lang="scss" scoped>
     .doctor-view {
         padding-top: 30px;
-        @include flex(center, flex-start, row);
+        @include flex(flex-start, flex-start, row);
 
         &__doctor-info {
             height: 100vh;
@@ -273,11 +286,18 @@
         width: 430px;
         background-color: #fff;
         border-radius: $border-radius;
+        min-height: 300px;
         @include materialShadow;
 
         &__header {
             margin-bottom: 10px;
             @include flex(space-between, center, row);
+        }
+
+        &__edit-button {
+            &_long {
+                margin: 10px 0 0 0;
+            }
         }
     }
 

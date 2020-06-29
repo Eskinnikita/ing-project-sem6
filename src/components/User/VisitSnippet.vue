@@ -4,23 +4,31 @@
             <b>{{removeSeconds(visit.visitSlot.visitTime)}}</b>
         </div>
         <div class="visit-snippet">
-            <div class="visit-snippet__info">
-                Вы записались к: <b>{{visit.doctor.name}}</b> на <b>{{removeSeconds(visit.visitSlot.visitTime)}} {{visit.visitSlot.visitDate | moment("D MMMM")}} {{visit.visitSlot.visitDate | moment("dddd")}}</b>
+            <div class="visit-snippet__info" v-if="isPatient">
+                Вы записались к: <b>{{visit.doctor.name}}</b> на <b>{{removeSeconds(visit.visitSlot.visitTime)}}
+                {{visit.visitSlot.visitDate | moment("D MMMM")}} {{visit.visitSlot.visitDate | moment("dddd")}}</b>
             </div>
-            <div class="visit-snippet__comment">
+            <div class="visit-snippet__info" v-if="isDoctor">
+                <b>{{visit.patientName}}</b> записался на <b>{{removeSeconds(visit.visitSlot.visitTime)}}
+                {{visit.visitSlot.visitDate | moment("D MMMM")}} {{visit.visitSlot.visitDate | moment("dddd")}}</b>
+            </div>
+            <div class="visit-snippet__comment" v-if="isPatient">
                 Комментарий: {{visit.comment}}
             </div>
+            <div class="visit-snippet__comment" v-if="isDoctor">
+                Комментарий пациента: {{visit.comment}}
+            </div>
             <div class="visit-snippet__controls">
-                <button-comp @click.native="cancelVisit" reject>Отменить</button-comp>
+                <button-comp @click.native="cancelVisit(visit.id, visit.slotId, visit.visitSlot.visitDate)" reject>Отменить</button-comp>
             </div>
         </div>
-<!--        <confirm-modal>Отменить запись?</confirm-modal>-->
     </div>
 </template>
 
 <script>
     import {mapGetters} from 'vuex'
     import Button from "../UI/Button"
+
     export default {
         props: {
             visit: {
@@ -36,7 +44,12 @@
                 const timeArr = time.split(':')
                 return `${timeArr[0]}:${timeArr[1]}`
             },
-            cancelVisit() {
+            cancelVisit(id, slotId, visitDate) {
+                this.$store.commit('SET_VISIT_TO_CANCEL', {
+                    visitId: id,
+                    visitSlotId: slotId,
+                    visitDate: visitDate
+                })
                 this.$modal.show('confirm-modal')
             }
         },
@@ -73,6 +86,7 @@
 
         &__controls {
             margin-top: 20px;
+
             button {
                 margin: 0;
             }

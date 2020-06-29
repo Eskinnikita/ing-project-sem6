@@ -1,6 +1,6 @@
 <template>
     <div class="reviews-requests">
-        <h2 class="reviews-requests__title title">Неопубликованные комментарии <span class="gray-text">• {{ReviewsStore.notApprovedReviews.length}}</span></h2>
+        <h2 class="reviews-requests__title title">Неопубликованные отзывы <span class="gray-text">• {{ReviewsStore.notApprovedReviews.length}}</span></h2>
         <template v-if="ReviewsStore.notApprovedReviews.length">
             <review-snippet
                     class="reviews-requests__review-snippet"

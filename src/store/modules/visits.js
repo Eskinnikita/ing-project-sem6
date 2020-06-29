@@ -3,11 +3,16 @@ import apiService from "../../services/apiService"
 const route = 'visits'
 
 export const state = {
-    visits: []
+    visits: [],
+    visitToCancel: {}
 }
 export const mutations = {
     SET_VISITS(state, visits) {
         state.visits = visits
+    },
+    SET_VISIT_TO_CANCEL(state, visit) {
+        console.log(visit)
+        state.visitToCancel = visit
     }
 }
 export const actions = {
@@ -28,6 +33,19 @@ export const actions = {
             catch(e) {
                 commit('SET_TOAST', {message: e.message, type: 'error'})
             }
+    },
+    async cancelVisit({commit, state}) {
+        try {
+            const data = {
+                visitId: state.visitToCancel.visitId,
+                visitSlotId: state.visitToCancel.visitSlotId,
+            }
+            await apiService.post(route + '/cancel-visit', data)
+            commit('SET_TOAST', {message: 'Вы отменили запись', type: 'success'})
+        }
+        catch(e) {
+            commit('SET_TOAST', {message: e.message, type: 'error'})
+        }
     }
 }
 

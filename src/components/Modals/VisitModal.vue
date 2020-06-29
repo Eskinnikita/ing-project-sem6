@@ -65,13 +65,7 @@
                     .then(() => {
                         this.$modal.hide('visit-modal')
                     })
-            },
-            // removeSeconds(time) {
-            //     if(time) {
-            //         const timeArr = time.split(':')
-            //         return `${timeArr[0]}:${timeArr[1]}`
-            //     }
-            // },
+            }
         },
         computed: {
             ...mapState(['user'])

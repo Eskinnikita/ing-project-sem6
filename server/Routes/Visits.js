@@ -9,7 +9,6 @@ const router = express.Router()
 
 router.post('/', async (req, res) => {
     try {
-        console.log(req.body)
         await Visit.create({
             doctorId: req.body.doctorId,
             patientId: req.body.patientId,
@@ -58,7 +57,7 @@ router.post('/all-visits', async (req, res) => {
                 include: [
                     {
                         model: VisitSlot,
-                        attributes: ['visitTime', 'visitDate']
+                        attributes: ['id', 'visitTime', 'visitDate']
                     },
                     {
                         model: Patient,
@@ -105,8 +104,29 @@ router.post('/all-visits', async (req, res) => {
         }
         res.status(200).send(visits)
     } catch (e) {
-        console.log(e)
         res.status(500).send({'message': 'Ошибка сервера'})
+    }
+})
+
+router.post('/cancel-visit', async (req, res) => {
+    try {
+        console.log(req.body)
+        await Visit.destroy({
+            where: {
+                id: req.body.visitId
+            }
+        })
+        await VisitSlot.update(
+            {isAvailable: true},
+            {
+                where: {
+                    id: req.body.visitSlotId
+                }
+            }
+        )
+        res.status(200).send({'message': 'Запись удалена!'})
+    } catch (e) {
+        res.status(500).send({id: req.params.id, 'message': e.message})
     }
 })
 

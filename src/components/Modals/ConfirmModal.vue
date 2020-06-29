@@ -6,7 +6,7 @@
             </p>
             <div class="confirm-modal__controls">
                 <button-comp @click.native="submitMethod" width="45%">Подтвердить</button-comp>
-                <button-comp width="45%" reject>Отменить</button-comp>
+                <button-comp @click.native="closeModal" width="45%" reject>Отменить</button-comp>
             </div>
         </div>
     </modal>
@@ -24,6 +24,11 @@
         },
         components: {
             'button-comp': Button
+        },
+        methods: {
+            closeModal() {
+                this.$modal.hide('confirm-modal')
+            }
         }
     }
 </script>

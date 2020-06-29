@@ -60,6 +60,9 @@ const Doctor = sequelize.define("doctor", {
         },
         reasonMessage: {
             type: DataTypes.TEXT
+        },
+        workingDays: {
+            type: DataTypes.STRING
         }
     }
 );

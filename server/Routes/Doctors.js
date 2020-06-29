@@ -137,7 +137,8 @@ router.post('/new-partner', upload.single('photo'), async (req, res) => {
             isApproved: false,
             isSearchable: false,
             reasonMessage: '',
-            role: 2
+            role: 2,
+            workingDays: ''
         })
             .then(result => {
                 const specs = JSON.parse(req.body.specs)
@@ -240,39 +241,6 @@ router.put('/:id', async (req, res) => {
             }
         )
         res.status(200).send(doctor)
-    } catch (e) {
-        res.status(500).send({id: req.params.id, 'message': e.message})
-    }
-})
-
-router.delete('/:id', async(req,res) => {
-    try {
-        await Doctor.destroy({
-            where: {
-                id: req.params.id
-            }
-        })
-        await Visit.destroy({
-            where: {
-                doctorId: req.params.id
-            }
-        })
-        await VisitSlots.destroy({
-            where: {
-                doctorId: req.params.id
-            }
-        })
-        await DoctorSpecs.destroy({
-            where: {
-                doctorId: req.params.id
-            }
-        })
-        await Review.destroy({
-            where: {
-                doctorId: req.params.id
-            }
-        })
-        res.status(200).send({'message': 'Профиль удален!'})
     } catch (e) {
         res.status(500).send({id: req.params.id, 'message': e.message})
     }

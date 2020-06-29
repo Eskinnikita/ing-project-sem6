@@ -1,16 +1,17 @@
 <template>
     <div class="schedule">
         <div class="schedule__cols">
-            <div class="schedule__col"
-                 v-for="(day, index) in doctorSchedule"
-                 :key="index"
-                 :style="{'display': index <= shownIndex && (index > (shownIndex - limit)) ? 'block' : 'none'}"
+            <div
+                    :style="{'display': index <= shownIndex && (index > (shownIndex - limit)) ? 'block' : 'none'}"
+                    class="schedule__col"
+                    v-for="(day, index) in doctorSchedule"
+                    :key="index"
             >
                 <div class="schedule__days days">
                     <button class="days__button">{{day.date | moment('dddd')}},<br>{{day.date | moment("D MMMM")}}
                     </button>
                 </div>
-                <div class="schedule__hours hours">
+                <div class="schedule__hours hours" v-if="checkWorkingDay(day)">
                     <button
                             @click="openVisitModal(hour)"
                             class="hours__button"
@@ -27,7 +28,7 @@
             <button :disabled="shownIndex === 2" @click="goToPrevDays">
                 <font-awesome-icon :icon="['fas', 'arrow-left']"/>
             </button>
-            <button :disabled="shownIndex > doctorSchedule.length" @click="goToNextDays">
+            <button :disabled="shownIndex + 3 > doctorSchedule.length" @click="goToNextDays">
                 <font-awesome-icon :icon="['fas', 'arrow-right']"/>
             </button>
         </div>
@@ -37,6 +38,8 @@
 
 <script>
     import VisitModal from "./Modals/VisitModal"
+    import {mapGetters} from 'vuex'
+    import {mapState} from 'vuex'
 
     export default {
         props: {
@@ -56,6 +59,8 @@
             if (this.schedule.length) {
                 this.parseSchedule()
             }
+
+            console.log(this.schedule)
         },
         data() {
             return {
@@ -66,11 +71,21 @@
             }
         },
         methods: {
+            checkWorkingDay(day) {
+                const momentDay = this.$moment(day.date).day()
+                const daysArr = this.DoctorsStore.doctor.workingDays.split(',').map(el => +el)
+                return daysArr.indexOf(momentDay) > -1
+            },
             openVisitModal(slot) {
-                this.visitSlot = slot
-                this.$modal.show('visit-modal')
+                if (this.isNotAuthenticated) {
+                    this.$modal.show('login-modal')
+                } else {
+                    this.visitSlot = slot
+                    this.$modal.show('visit-modal')
+                }
             },
             parseSchedule() {
+                this.doctorSchedule = []
                 this.schedule.forEach(slot => {
                     if (this.doctorSchedule.length === 0) {
                         this.doctorSchedule.push({
@@ -106,6 +121,15 @@
                 this.shownIndex -= this.limit
             }
         },
+        computed: {
+            ...mapState(['DoctorsStore']),
+            ...mapGetters(['isNotAuthenticated'])
+        },
+        watch: {
+            schedule() {
+                this.parseSchedule()
+            }
+        }
     }
 </script>
 
@@ -124,6 +148,10 @@
             padding: 0 10px;
             width: 33.3%;
             box-sizing: border-box;
+
+            &_not-active {
+                opacity: 0.3;
+            }
         }
 
         &__controls {

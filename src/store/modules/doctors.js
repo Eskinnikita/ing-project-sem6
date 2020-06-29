@@ -73,10 +73,11 @@ export const actions = {
             commit('SET_TOAST', {message: e.message, type: 'error'})
         }
     },
-    async deleteDoctor({commit}, id) {
+    async deleteDoctor({commit, dispatch}, id) {
         try {
             await apiService.delete(`${route}`, id)
                 .then(() => {
+                    dispatch('logoutUser')
                     commit('SET_TOAST', {message: 'Профиль удален!', type: 'error'})
                 })
         }

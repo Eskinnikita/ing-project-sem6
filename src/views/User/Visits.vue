@@ -15,7 +15,7 @@
                 />
             </div>
         </div>
-        <confirm-modal>Отменить запись?</confirm-modal>
+        <confirm-modal :submit-method="cancelVisit">Отменить запись?</confirm-modal>
     </div>
 </template>
 
@@ -42,6 +42,23 @@
             }
         },
         methods: {
+            cancelVisit() {
+                this.$store.dispatch('cancelVisit')
+                .then(() => {
+                    this.removeVisit()
+                    this.$modal.hide('confirm-modal')
+                })
+            },
+            removeVisit() {
+                const visitToRemove = this.VisitsStore.visitToCancel
+                const dayWithVisit = this.parsedVisits.find(el => el.date === visitToRemove.visitDate)
+                const visitInDayIndex = dayWithVisit.visits.findIndex(el => el.id === visitToRemove.id)
+                dayWithVisit.visits.splice(visitInDayIndex, 1)
+                if(!dayWithVisit.visits.length) {
+                    const emptyDayIndex = this.parsedVisits.findIndex(el => el.date === dayWithVisit.date)
+                    this.parsedVisits.splice(emptyDayIndex, 1)
+                }
+            },
             checkToday(day) {
                 const currentDate = this.$moment(new Date()).format("YYYY-MM-DD");
                 return currentDate === day ? 'Сегодня' : day
