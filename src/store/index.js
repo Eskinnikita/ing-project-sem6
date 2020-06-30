@@ -39,12 +39,9 @@ export default new Vuex.Store({
             );
         },
         UPDATE_USER(state, user) {
-            console.log(user)
             for (let key in user) {
-                console.log(key, state.user[key], user[key])
                 state.user[key] = user[key]
             }
-            console.log(state.user)
         },
         SET_LOADER(state, status) {
             state.loadingStatus = status
@@ -75,7 +72,6 @@ export default new Vuex.Store({
             commit('SET_TOAST', {message: 'Вы успешно вышли!', type: 'success'})
         },
         async updateUser({commit, dispatch}, user) {
-            console.log(user)
             try {
                 await apiService.update(`patients`, user.id, user)
                 dispatch('loginUser', {

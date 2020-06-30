@@ -57,7 +57,6 @@ router.get('/:id', async (req, res) => {
 })
 
 router.put('/:id', async (req, res) => {
-    console.log(req.body)
     try {
         const patient = await Patient.update(
             req.body,
@@ -69,7 +68,6 @@ router.put('/:id', async (req, res) => {
         )
         res.status(200).send(patient)
     } catch (e) {
-        console.log(e)
         res.status(500).send({id: req.params.id, 'message': e.message})
     }
 })

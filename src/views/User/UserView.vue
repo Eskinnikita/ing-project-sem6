@@ -54,6 +54,7 @@
     export default {
         created() {
             this.userData = JSON.parse(JSON.stringify(this.user))
+            this.userData.birthDate = new Date(this.userData.birthDate)
         },
         components: {
             'input-comp': Input,
@@ -67,6 +68,7 @@
         },
         methods: {
             saveChanges() {
+                this.userData.birthDate.setDate(this.userData.birthDate.getDate() + 1);
                 this.$store.dispatch('updateUser', this.userData)
             }
         },

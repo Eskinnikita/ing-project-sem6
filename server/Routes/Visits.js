@@ -110,7 +110,6 @@ router.post('/all-visits', async (req, res) => {
 
 router.post('/cancel-visit', async (req, res) => {
     try {
-        console.log(req.body)
         await Visit.destroy({
             where: {
                 id: req.body.visitId

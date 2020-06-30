@@ -2,7 +2,7 @@
     <div class="visits">
         <h2 class="visits__title title" v-if="isPatient">Мои записи</h2>
         <h2 class="visits__title title" v-if="isDoctor">Мои пациенты</h2>
-        <div class="visits__visits-list">
+        <div class="visits__visits-list" v-if="parsedVisits.length">
             <div class="visits__visit-item" v-for="(day, index) in parsedVisits" :key="index">
                 <div class="visits__date">
                     <h2>{{checkToday(day.date) | moment("D MMMM")}}</h2>
@@ -15,6 +15,17 @@
                 />
             </div>
         </div>
+        <div class="visits__no-visits" v-else>
+            <template v-if="isPatient">
+                <h3>Похоже, вы еще не записались ни на один прием</h3>
+                <router-link to="/">
+                    <button-comp>Перейти к поиску?</button-comp>
+                </router-link>
+            </template>
+            <template v-else>
+                <h3>Никто еще не записался к вам на прием</h3>
+            </template>
+        </div>
         <confirm-modal :submit-method="cancelVisit">Отменить запись?</confirm-modal>
     </div>
 </template>
@@ -24,11 +35,13 @@
     import {mapGetters} from 'vuex'
     import {mapState} from 'vuex'
     import ConfirmModal from "../../components/Modals/ConfirmModal"
+    import Button from "../../components/UI/Button"
 
     export default {
         components: {
             'visit-snippet': VisitSnippet,
-            'confirm-modal': ConfirmModal
+            'confirm-modal': ConfirmModal,
+            'button-comp': Button
         },
         mounted() {
             this.$store.dispatch('getUserVisits', {id: this.user.id, role: this.user.role})
@@ -44,17 +57,17 @@
         methods: {
             cancelVisit() {
                 this.$store.dispatch('cancelVisit')
-                .then(() => {
-                    this.removeVisit()
-                    this.$modal.hide('confirm-modal')
-                })
+                    .then(() => {
+                        this.removeVisit()
+                        this.$modal.hide('confirm-modal')
+                    })
             },
             removeVisit() {
                 const visitToRemove = this.VisitsStore.visitToCancel
                 const dayWithVisit = this.parsedVisits.find(el => el.date === visitToRemove.visitDate)
                 const visitInDayIndex = dayWithVisit.visits.findIndex(el => el.id === visitToRemove.id)
                 dayWithVisit.visits.splice(visitInDayIndex, 1)
-                if(!dayWithVisit.visits.length) {
+                if (!dayWithVisit.visits.length) {
                     const emptyDayIndex = this.parsedVisits.findIndex(el => el.date === dayWithVisit.date)
                     this.parsedVisits.splice(emptyDayIndex, 1)
                 }
@@ -107,6 +120,18 @@
 
 <style lang="scss" scoped>
     .visits {
+        &__no-visits {
+            text-align: center;
+
+            h3 {
+                font-weight: normal;
+            }
+
+            button {
+                margin-top: 20px;
+            }
+        }
+
         &__title {
             text-align: center;
             margin-bottom: 40px;

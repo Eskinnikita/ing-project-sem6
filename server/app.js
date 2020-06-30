@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const sequelize = require('./Connection/sequelize')
 const cors = require('cors');
-var schedule = require('node-schedule');
+const schedule = require('node-schedule');
 
 const app = express();
 
@@ -80,8 +80,6 @@ const j = schedule.scheduleJob('00 17 00 * * *', async () => {
         })
 
         await VisitSlot.bulkCreate(newVisitSlots)
-
-        console.log(visitSlotsToDelete, newVisitSlots)
     } catch (e) {
         console.log(e)
     }

@@ -18,7 +18,6 @@ router.post('/', async (req, res) => {
                 res.status(200).send(data)
             })
             .catch(err => {
-                console.log(err)
                 res.status(404).send(err)
             });
     } catch (e) {
@@ -40,7 +39,6 @@ router.get('/not-approved', async (req, res) => {
                 res.status(200).send(data)
             })
             .catch(err => {
-                console.log(err)
                 res.status(404).send(err)
             });
     } catch (e) {
@@ -60,7 +58,6 @@ router.put('/:id', async (req, res) => {
         )
         res.status(200).send(doctor)
     } catch (e) {
-        console.log(e)
         res.status(500).send({id: req.params.id, 'message': e.message})
     }
 })

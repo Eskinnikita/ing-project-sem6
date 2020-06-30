@@ -2,6 +2,7 @@ const Doctor = require('../Models/Doctor')
 const DoctorSpecs = require('../Models/DoctorSpecs')
 const VisitSlots = require('../Models/VisitSlot')
 const Visit = require('../Models/Visit')
+const DailySchedule = require('../Models/DoctorDailyScheduleTemplate')
 const Spec = require('../Models/Spec')
 const Review = require('../Models/Review')
 const express = require('express')
@@ -43,6 +44,9 @@ const urlencodedParser = bodyParser.urlencoded({extended: false});
 //login doctor in system
 router.post('/login', async (req, res) => {
     try {
+        Doctor.hasMany(DailySchedule, {foreignKey: 'doctorId'})
+        DailySchedule.belongsTo(Doctor, {foreignKey: 'id'})
+
         Doctor.belongsToMany(Spec, {through: DoctorSpecs, foreignKey: 'doctorId'})
         Spec.belongsToMany(Doctor, {through: DoctorSpecs, foreignKey: 'specId'})
         await Doctor.findOne({
@@ -53,6 +57,11 @@ router.post('/login', async (req, res) => {
             include: [
                 {
                     model: Spec
+                },
+                {
+                    model: DailySchedule,
+                    attributes: ['availableTime'],
+                    required: false
                 }
             ]
         })
@@ -76,6 +85,10 @@ router.post('/', async (req, res) => {
         const specId = req.body.specId
         Doctor.belongsToMany(Spec, {through: DoctorSpecs, foreignKey: 'doctorId'})
         Spec.belongsToMany(Doctor, {through: DoctorSpecs, foreignKey: 'specId'})
+
+        Doctor.hasMany(Review, {foreignKey: 'doctorId'})
+        Review.belongsTo(Doctor, {foreignKey: 'id'})
+
         const doctors = await Doctor.findAll({
             where: {
                 city: city,
@@ -87,6 +100,11 @@ router.post('/', async (req, res) => {
             include: [
                 {
                     model: Spec
+                },
+                {
+                    model: Review,
+                    attributes: ['rating'],
+                    required: false
                 }
             ]
         })
@@ -153,7 +171,7 @@ router.post('/new-partner', upload.single('photo'), async (req, res) => {
                 })
             })
             .catch(e => {
-                console.log('ERROr', e.message)
+                res.status(404).send({message: e.message})
             })
     } catch (e) {
         res.status(500).send({'message': e.message})
@@ -187,6 +205,9 @@ router.get('/:id', async (req, res) => {
     try {
         Doctor.hasMany(Review, {foreignKey: 'doctorId'})
         Review.belongsTo(Doctor, {foreignKey: 'id'})
+
+        Doctor.hasMany(VisitSlots, {foreignKey: 'doctorId'})
+        VisitSlots.belongsTo(Doctor, {foreignKey: 'id'})
 
         Doctor.hasMany(VisitSlots, {foreignKey: 'doctorId'})
         VisitSlots.belongsTo(Doctor, {foreignKey: 'id'})

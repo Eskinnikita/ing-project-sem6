@@ -44,6 +44,8 @@
             this.createTime()
             if(this.user.workingDays) {
                 this.parseDoctorSchedule()
+                this.dayStart = this.user.doctorDailyScheduleTemplates[0].availableTime
+                this.dayEnd = this.user.doctorDailyScheduleTemplates[this.user.doctorDailyScheduleTemplates.length - 1].availableTime
             }
         },
         methods: {
@@ -55,7 +57,6 @@
                 })
             },
             prepareDailyTemplates() {
-                console.log(this.dayStart, this.dayEnd)
                 const dayStartIndex = this.workingTime.findIndex(el => el === this.dayStart)
                 const dayEndIndex = this.workingTime.findIndex(el => el === this.dayEnd)
                 const workingTimeCopy = JSON.parse(JSON.stringify(this.workingTime))

@@ -30,7 +30,6 @@
             'not-approved-modal': NotApprovedModal
         },
         created() {
-            console.log(this.id)
         },
         methods: {
             approveDoctor() {

@@ -11,7 +11,6 @@ export const mutations = {
         state.visits = visits
     },
     SET_VISIT_TO_CANCEL(state, visit) {
-        console.log(visit)
         state.visitToCancel = visit
     }
 }

@@ -11,7 +11,7 @@
                         :star-size="23"
                         inactive-color="#bebebe"
                         active-color="#24B9D7"
-                        :rating="doctor.rating"
+                        :rating="doctorRating"
                         :read-only="true"
                         :increment="0.01"
                 />
@@ -118,7 +118,18 @@
             }
         },
         computed: {
-            ...mapState(['user'])
+            ...mapState(['user']),
+            doctorRating() {
+                if (this.doctor.reviews && this.doctor.reviews.length) {
+                    let starsSum = 0
+                    this.doctor.reviews.forEach(el => {
+                        starsSum += +el.rating
+                    })
+                    return starsSum / this.doctor.reviews.length
+                } else {
+                    return 5;
+                }
+            }
         }
     }
 </script>

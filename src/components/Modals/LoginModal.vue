@@ -30,7 +30,8 @@
                 </label>
             </div>
             <button-comp @click.native="login" width="100%">Войти</button-comp>
-            <button @click="goToRegistration" class="modal-container__underlined-button underlined-button">Регистрация</button>
+            <button @click="goToRegistration" class="modal-container__underlined-button underlined-button">Регистрация
+            </button>
         </div>
     </modal>
 </template>
@@ -64,13 +65,8 @@
             login() {
                 if (this.$v.$invalid) {
                     this.$v.$touch()
-                }
-                else {
-                    if(this.isDoctor) {
-                        console.log('ВРАЧА ВРАЧА')
-                    }
-                    else {
-                        this.$store.dispatch('loginUser', this.user)
+                } else {
+                    this.$store.dispatch('loginUser', this.user)
                         .then(() => {
                             this.$modal.hide('login-modal')
                             this.user = {
@@ -79,7 +75,6 @@
                                 isDoctor: false
                             }
                         })
-                    }
                 }
             },
             goToRegistration() {

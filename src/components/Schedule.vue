@@ -22,6 +22,11 @@
                         {{removeSeconds(hour.visitTime)}}
                     </button>
                 </div>
+                <div v-else class="schedule__not-working-hours not-working-hours">
+                    <div class="not-working-hours__shift" v-for="index in day.hours.length" :key="index">
+                        <hr>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="schedule__controls">
@@ -59,8 +64,6 @@
             if (this.schedule.length) {
                 this.parseSchedule()
             }
-
-            console.log(this.schedule)
         },
         data() {
             return {
@@ -221,6 +224,23 @@
             &:disabled, &[disabled] {
                 opacity: 0.4;
                 cursor: default;
+            }
+        }
+    }
+
+    .not-working-hours {
+        @include flex(flex-start, center, column);
+        &__shift {
+            @include flex(center, center, row);
+            text-align: center;
+            width: 30px;
+            height: 35px;
+            margin-bottom: 11px;
+            font-size: 14px;
+
+            hr {
+                border: 1px solid $dark-gray;
+                width: 100%;
             }
         }
     }
