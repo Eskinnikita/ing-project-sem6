@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
             patientName: req.body.patientName,
             phoneNumber: req.body.phoneNumber,
             comment: req.body.comment,
-            slotId: req.body.slot.id,
+            slotId: req.body.slot.id
         })
 
         await VisitSlot.update(

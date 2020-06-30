@@ -15,10 +15,12 @@
                     v-model="review.rating"
             />
             <div class="input-wrapper">
-<!--                <label for="review">Текст отзыва:</label>-->
                 <textarea placeholder="Текст отзыва" v-model="review.text" id="review"/>
+                <span class="input-wrapper__error" v-if="$v.review.text.$dirty && !$v.review.text.required">Введите текст отзыва!</span>
             </div>
-            <button-comp :is-disabled="isDisabled" style="margin: 0" width="100%" @click.native="sendReview">Отправить отзыв</button-comp>
+            <button-comp :is-disabled="isDisabled" style="margin: 0" width="100%" @click.native="sendReview">Отправить
+                отзыв
+            </button-comp>
         </div>
     </modal>
 </template>
@@ -27,6 +29,7 @@
     import {mapState} from 'vuex'
     import StarRating from 'vue-star-rating'
     import Button from "../UI/Button"
+    import {required} from 'vuelidate/lib/validators'
 
     export default {
         components: {
@@ -36,6 +39,12 @@
         created() {
             this.review.patientId = this.user.id
             this.review.reviewerName = this.user.name
+        },
+        validations: {
+            review: {
+                rating: {required},
+                text: {required}
+            }
         },
         data() {
             return {
@@ -53,11 +62,15 @@
         },
         methods: {
             sendReview() {
-                this.review.doctorId = this.DoctorsStore.doctor.id
-                this.$store.dispatch('addReview', this.review)
-                    .then(() => {
-                        this.$modal.hide('review-modal')
-                    })
+                if (this.$v.$invalid) {
+                    this.$v.$touch()
+                } else {
+                    this.review.doctorId = this.DoctorsStore.doctor.id
+                    this.$store.dispatch('addReview', this.review)
+                        .then(() => {
+                            this.$modal.hide('review-modal')
+                        })
+                }
             }
         },
         computed: {

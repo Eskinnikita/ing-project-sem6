@@ -2,28 +2,54 @@
     <div class="visits">
         <h2 class="visits__title title" v-if="isPatient">Мои записи</h2>
         <h2 class="visits__title title" v-if="isDoctor">Мои пациенты</h2>
-        <div class="visits__visits-list" v-if="parsedVisits.length">
-            <div class="visits__visit-item" v-for="(day, index) in parsedVisits" :key="index">
-                <div class="visits__date">
-                    <h2>{{checkToday(day.date) | moment("D MMMM")}}</h2>
-                    <hr>
-                </div>
-                <visit-snippet
-                        v-for="(visit, index) in day.visits"
-                        :key="index"
-                        :visit="visit"
-                />
-            </div>
+        <div class="visits__list-controls list-controls">
+            <button
+                    :class="!showHistory ?  'list-controls__button list-controls__button_active' : 'list-controls__button'"
+                    @click="toggleList(false)">Активные
+            </button>
+            <button
+                    :class="showHistory ? 'list-controls__button list-controls__button_active' : 'list-controls__button'"
+                    @click="toggleList(true)">История
+            </button>
         </div>
-        <div class="visits__no-visits" v-else>
-            <template v-if="isPatient">
-                <h3>Похоже, вы еще не записались ни на один прием</h3>
-                <router-link to="/">
+        <div class="visits__visits-list">
+            <template v-if="activeVisits.length && !showHistory">
+                <div class="visits__visit-item" v-for="(day, index) in activeVisits" :key="index">
+                    <div class="visits__date">
+                        <h2>{{checkToday(day.date) | moment("D MMMM")}}</h2>
+                        <hr>
+                    </div>
+                    <visit-snippet
+                            v-for="(visit, index) in day.visits"
+                            :key="index"
+                            :visit="visit"
+                    />
+                </div>
+            </template>
+            <template v-if="historyVisits.length && showHistory">
+                <div class="visits__visit-item" v-for="(day, index) in historyVisits" :key="index">
+                    <div class="visits__date">
+                        <h2>{{checkToday(day.date) | moment("D MMMM")}}</h2>
+                        <hr>
+                    </div>
+                    <visit-snippet
+                            v-for="(visit, index) in day.visits"
+                            :key="index"
+                            :visit="visit"
+                    />
+                </div>
+            </template>
+        </div>
+        <div class="visits__no-visits">
+            <template v-if="(isDoctor || isPatient) && !activeVisits.length && !showHistory">
+                <h3 v-if="isPatient">Похоже, у вас еще нет записей</h3>
+                <h3 v-if="isDoctor">Похоже, к вам еще никто не записывался</h3>
+                <router-link v-if="isPatient" to="/">
                     <button-comp>Перейти к поиску?</button-comp>
                 </router-link>
             </template>
-            <template v-else>
-                <h3>Никто еще не записался к вам на прием</h3>
+            <template v-if="(isDoctor || isPatient) && !historyVisits.length && showHistory">
+                <h3>История пока что пустует</h3>
             </template>
         </div>
         <confirm-modal :submit-method="cancelVisit">Отменить запись?</confirm-modal>
@@ -51,10 +77,16 @@
         },
         data() {
             return {
-                parsedVisits: []
+                showHistory: false,
+                parsedVisits: [],
+                historyVisits: [],
+                activeVisits: []
             }
         },
         methods: {
+            toggleList(status) {
+                this.showHistory = status
+            },
             cancelVisit() {
                 this.$store.dispatch('cancelVisit')
                     .then(() => {
@@ -95,7 +127,18 @@
                         }
                     }
                 })
+                const currentDate = this.$moment(new Date()).format("YYYY-MM-DD");
                 this.parsedVisits.forEach(el => {
+                    if (el.date >= currentDate) {
+                        this.activeVisits.push(el)
+                    } else {
+                        this.historyVisits.push(el)
+                    }
+                })
+                this.activeVisits.forEach(el => {
+                    el.visits.sort(this.compare)
+                })
+                this.historyVisits.forEach(el => {
                     el.visits.sort(this.compare)
                 })
             },
@@ -134,7 +177,7 @@
 
         &__title {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
         &__visits-list {
@@ -158,6 +201,15 @@
                 width: 100%;
                 color: rgba(0, 0, 0, 0.4);
             }
+        }
+    }
+
+    .list-controls {
+        margin-bottom: 30px;
+        @include flex(center, center, row);
+
+        &__button {
+            @include pinkControls;
         }
     }
 </style>

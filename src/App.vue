@@ -110,6 +110,13 @@
         input {
             /*margin-top: 7px;*/
         }
+
+        &__error {
+            display: block;
+            padding-top: 4px;
+            font-size: 12px;
+            color: $accent-pink-color;
+        }
     }
 
     textarea {

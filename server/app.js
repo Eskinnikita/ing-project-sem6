@@ -59,7 +59,7 @@ const j = schedule.scheduleJob('00 17 00 * * *', async () => {
         const newVisitSlots = []
 
         VisitSlots.forEach(el => {
-            if (el.visitDate < currentDate) {
+            if (el.visitDate < currentDate && el.isAvailable) {
                 visitSlotsToDelete.push(el.id)
             }
         })

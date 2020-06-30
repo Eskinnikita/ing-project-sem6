@@ -2,8 +2,16 @@
     <modal class="visit-modal" style="{'border-radius': 5px}" height="600" width="400" name="visit-modal">
         <div class="modal-container">
             <h2 class="visit-modal__title title">Запись на приём</h2>
-            <input-comp label="Ваше имя:" v-model="visit.patientName"/>
-            <input-comp label="Номер телефона:" v-model="visit.phoneNumber"/>
+            <input-comp
+                    :required="true"
+                    label="Ваше имя:"
+                    v-model="visit.patientName"
+            />
+            <input-comp
+                    :required="true"
+                    label="Номер телефона:"
+                    v-model="visit.phoneNumber"
+            />
             <div class="input-wrapper">
                 <label for="comment">Комментарий к записи:</label>
                 <textarea v-model="visit.comment" style="height: 150px;" placeholder="Текст комментария" id="comment"/>
@@ -23,6 +31,7 @@
     import {mapState} from 'vuex'
     import Button from "../UI/Button"
     import Input from "../UI/Input"
+    import {required} from 'vuelidate/lib/validators'
 
     export default {
         props: {
@@ -43,6 +52,12 @@
             this.visit.patientName += this.user.name
             this.visit.phoneNumber += this.user.phoneNumber ? this.user.phoneNumber : ''
         },
+        validations: {
+            visit: {
+                patientName: {required},
+                phoneNumber: {required}
+            }
+        },
         data() {
             return {
                 visit: {
@@ -57,14 +72,18 @@
         },
         methods: {
             addVisit() {
-                this.visit.doctorId = this.doctorId
-                this.visit.patientId = this.user.id
-                this.visit.slot = this.visitSlot
-                this.visit.slot.isAvailable = false
-                this.$store.dispatch('addVisit', this.visit)
-                    .then(() => {
-                        this.$modal.hide('visit-modal')
-                    })
+                if (this.$v.$invalid) {
+                    this.$v.$touch()
+                } else {
+                    this.visit.doctorId = this.doctorId
+                    this.visit.patientId = this.user.id
+                    this.visit.slot = this.visitSlot
+                    this.visit.slot.isAvailable = false
+                    this.$store.dispatch('addVisit', this.visit)
+                        .then(() => {
+                            this.$modal.hide('visit-modal')
+                        })
+                }
             }
         },
         computed: {

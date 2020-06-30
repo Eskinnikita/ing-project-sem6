@@ -21,7 +21,7 @@
                     label="Пароль:"
                     :type="'password'"
                     :invalid-condition="$v.user.password.$dirty && !$v.user.password.required"
-                    :invalid-message="'Введите почту'"
+                    :invalid-message="'Введите пароль'"
             />
             <div class="modal-container__checkbox">
                 <label>

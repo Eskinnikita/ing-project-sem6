@@ -200,14 +200,27 @@ router.get('/not-approved', urlencodedParser, async (req, res) => {
     }
 })
 
+function formatDate(date) {
+    let d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
 //get doctor by Id
 router.get('/:id', async (req, res) => {
     try {
+        let yesterday = formatDate(new Date())
+
         Doctor.hasMany(Review, {foreignKey: 'doctorId'})
         Review.belongsTo(Doctor, {foreignKey: 'id'})
-
-        Doctor.hasMany(VisitSlots, {foreignKey: 'doctorId'})
-        VisitSlots.belongsTo(Doctor, {foreignKey: 'id'})
 
         Doctor.hasMany(VisitSlots, {foreignKey: 'doctorId'})
         VisitSlots.belongsTo(Doctor, {foreignKey: 'id'})
@@ -233,7 +246,10 @@ router.get('/:id', async (req, res) => {
                 {
                     model: VisitSlots,
                     where: {
-                        doctorId: req.params.id
+                        doctorId: req.params.id,
+                        visitDate: {
+                            [Op.gte]: yesterday
+                        }
                     },
                     required: false
                 }
@@ -246,6 +262,7 @@ router.get('/:id', async (req, res) => {
                 res.status(404).send({message: 'Доктор не найден'})
             })
     } catch (e) {
+        console.log(e)
         res.status(500).send({'message': e.message})
     }
 })

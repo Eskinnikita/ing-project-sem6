@@ -13,7 +13,7 @@
                 {{visit.visitSlot.visitDate | moment("D MMMM")}} {{visit.visitSlot.visitDate | moment("dddd")}}</b>
             </div>
             <div class="visit-snippet__comment" v-if="isPatient">
-                Комментарий: {{visit.comment}}
+                Комментарий: {{visit.comment ? visit.comment : 'отсутствует'}}
             </div>
             <div class="visit-snippet__comment" v-if="isDoctor">
                 Комментарий пациента: {{visit.comment}}
