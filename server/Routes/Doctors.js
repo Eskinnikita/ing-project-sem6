@@ -104,6 +104,10 @@ router.post('/', async (req, res) => {
                 {
                     model: Review,
                     attributes: ['rating'],
+                    where: {
+                        isApproved: true,
+                        isDisplayed: true
+                    },
                     required: false
                 }
             ]

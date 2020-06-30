@@ -28,7 +28,7 @@
                         <h3 class="doctor-info__name">{{doctor.name}}</h3>
                         <span class="doctor-info__specs">{{parseSpecs(doctor.specializations)}}</span>
                         <span>Стаж {{expToStr(doctor.experience)}}</span>
-                        <span class="doctor-info__price">От {{doctor.visitPrice}} &#8381;</span>
+                        <span class="doctor-info__price">От {{doctor.visitPrice}} &#8381; {{defineWorkSpace(doctor.workType)}}</span>
                     </div>
                 </div>
                 <div class="doctor-info__about">
@@ -115,22 +115,6 @@
             addReview() {
                 this.$modal.show('review-modal')
             },
-            defineWorkSpace(type) {
-                let workType = ''
-                switch (type) {
-                    case 1:
-                        workType = 'В клинике'
-                        break;
-                    case 2:
-                        workType = 'Онлайн'
-                        break;
-                    case 3:
-                        workType = 'На дому'
-                        break;
-                }
-                return workType
-            }
-            ,
             parseSpecs(specs) {
                 let specsStr = ''
                 for (const index in specs) {
@@ -164,6 +148,21 @@
             },
             goToScheduleEdit() {
                 this.$router.push('/schedule-edit')
+            },
+            defineWorkSpace(type) {
+                let workType = ''
+                switch (type) {
+                    case 1:
+                        workType = 'в клинике'
+                        break;
+                    case 2:
+                        workType = 'Онлайн'
+                        break;
+                    case 3:
+                        workType = 'на дому'
+                        break;
+                }
+                return workType
             }
         },
         computed: {

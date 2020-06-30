@@ -47,7 +47,7 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
-const j = schedule.scheduleJob('00 17 00 * * *', async () => {
+const j = schedule.scheduleJob('00 00 00 * * *', async () => {
     try {
         const currentDate = formatDate(new Date())
         const tomorrowDate = new Date();
