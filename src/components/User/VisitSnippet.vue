@@ -49,7 +49,6 @@
                 return `${timeArr[0]}:${timeArr[1]}`
             },
             cancelVisit(id, slotId, visitDate) {
-                console.log(id, slotId, visitDate)
                 this.$store.commit('SET_VISIT_TO_CANCEL', {
                     visitId: id,
                     visitSlotId: slotId,

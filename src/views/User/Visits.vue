@@ -99,11 +99,8 @@
             },
             removeVisit() {
                 const visitToRemove = this.VisitsStore.visitToCancel
-                console.log(visitToRemove)
                 const dayWithVisit = this.activeVisits.find(el => el.date === visitToRemove.visitDate)
-                console.log(dayWithVisit)
                 const visitInDayIndex = dayWithVisit.visits.findIndex(el => el.id === visitToRemove.visitId)
-                console.log(visitInDayIndex)
                 dayWithVisit.visits.splice(visitInDayIndex, 1)
                 if (!dayWithVisit.visits.length) {
                     const emptyDayIndex = this.activeVisits.findIndex(el => el.date === dayWithVisit.date)
