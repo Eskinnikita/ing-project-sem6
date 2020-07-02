@@ -12,6 +12,9 @@ export const mutations = {
     },
     SET_VISIT_TO_CANCEL(state, visit) {
         state.visitToCancel = visit
+    },
+    SET_EMPTY_VISIT_TO_CANCEL(state) {
+        state.visitToCancel = {}
     }
 }
 export const actions = {

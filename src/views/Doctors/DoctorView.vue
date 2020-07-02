@@ -29,6 +29,8 @@
                         <span class="doctor-info__specs">{{parseSpecs(doctor.specializations)}}</span>
                         <span>Стаж {{expToStr(doctor.experience)}}</span>
                         <span class="doctor-info__price">От {{doctor.visitPrice}} &#8381; {{defineWorkSpace(doctor.workType)}}</span>
+                        <span class="doctor-info__address">Адрес: {{doctor.clinicAddress}}</span>
+                        <a v-if="doctor.phoneNumber" :href="`tel:+7${doctor.phoneNumber}`" class="doctor-info__phone-number">+7 {{doctor.phoneNumber | phone}}</a>
                     </div>
                 </div>
                 <div class="doctor-info__about">
@@ -70,7 +72,8 @@
                 </template>
                 <template v-else>
                     <h2 class="title">Расписание врача</h2>
-                    <p>Похоже, вы еще не настроили ваше расписание</p>
+                    <p v-if="isDoctor">Похоже, вы еще не настроили ваше расписание</p>
+                    <p v-if="isAdmin">Расписание не настроено</p>
                     <button-comp class="doctor-schedule__edit-button_long" width="100%" @click.native="goToScheduleEdit">Перейти к настройке</button-comp>
                 </template>
             </div>
@@ -99,6 +102,12 @@
             ReviewSnippet,
             ReviewModal,
             'button-comp': Button
+        },
+        filters: {
+            phone(phoneNum) {
+                return phoneNum.replace(/[^0-9]/g, '')
+                    .replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+            }
         },
         created() {
             this.$store.dispatch('findDoctorById', this.$route.params.id)
@@ -230,6 +239,21 @@
     .doctor-info {
         padding-right: 40px;
         box-sizing: border-box;
+
+        &__address {
+            margin: 10px 0;
+        }
+
+        &__phone-number {
+            color: #000;
+            text-decoration: underline;
+            margin-top: 5px;
+            transition: color 0.3s;
+            font-size: 18px;
+            &:hover {
+                color: $accent-blue-color;
+            }
+        }
 
         &__review-snippet {
             margin-bottom: 20px;

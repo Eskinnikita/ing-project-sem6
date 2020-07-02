@@ -23,6 +23,7 @@
                             v-for="(visit, index) in day.visits"
                             :key="index"
                             :visit="visit"
+                            :show-cancel-button="true"
                     />
                 </div>
             </template>
@@ -36,6 +37,7 @@
                             v-for="(visit, index) in day.visits"
                             :key="index"
                             :visit="visit"
+                            :show-cancel-button="false"
                     />
                 </div>
             </template>
@@ -92,16 +94,20 @@
                     .then(() => {
                         this.removeVisit()
                         this.$modal.hide('confirm-modal')
+                        this.$store.commit('SET_EMPTY_VISIT_TO_CANCEL')
                     })
             },
             removeVisit() {
                 const visitToRemove = this.VisitsStore.visitToCancel
-                const dayWithVisit = this.parsedVisits.find(el => el.date === visitToRemove.visitDate)
-                const visitInDayIndex = dayWithVisit.visits.findIndex(el => el.id === visitToRemove.id)
+                console.log(visitToRemove)
+                const dayWithVisit = this.activeVisits.find(el => el.date === visitToRemove.visitDate)
+                console.log(dayWithVisit)
+                const visitInDayIndex = dayWithVisit.visits.findIndex(el => el.id === visitToRemove.visitId)
+                console.log(visitInDayIndex)
                 dayWithVisit.visits.splice(visitInDayIndex, 1)
                 if (!dayWithVisit.visits.length) {
-                    const emptyDayIndex = this.parsedVisits.findIndex(el => el.date === dayWithVisit.date)
-                    this.parsedVisits.splice(emptyDayIndex, 1)
+                    const emptyDayIndex = this.activeVisits.findIndex(el => el.date === dayWithVisit.date)
+                    this.activeVisits.splice(emptyDayIndex, 1)
                 }
             },
             checkToday(day) {

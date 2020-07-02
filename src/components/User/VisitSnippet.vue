@@ -19,7 +19,7 @@
                 Комментарий пациента: {{visit.comment}}
             </div>
             <div class="visit-snippet__controls">
-                <button-comp @click.native="cancelVisit(visit.id, visit.slotId, visit.visitSlot.visitDate)" reject>Отменить</button-comp>
+                <button-comp v-if="showCancelButton" @click.native="cancelVisit(visit.id, visit.slotId, visit.visitSlot.visitDate)" reject>Отменить</button-comp>
             </div>
         </div>
     </div>
@@ -34,6 +34,10 @@
             visit: {
                 type: Object,
                 required: true
+            },
+            showCancelButton: {
+                type: Boolean,
+                required: true
             }
         },
         components: {
@@ -45,6 +49,7 @@
                 return `${timeArr[0]}:${timeArr[1]}`
             },
             cancelVisit(id, slotId, visitDate) {
+                console.log(id, slotId, visitDate)
                 this.$store.commit('SET_VISIT_TO_CANCEL', {
                     visitId: id,
                     visitSlotId: slotId,
