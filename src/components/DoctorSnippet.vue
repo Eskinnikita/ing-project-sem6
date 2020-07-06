@@ -3,7 +3,7 @@
     <div class="doctor-snippet">
         <div class="doctor-snippet__left">
             <div class="doctor-snippet__photo">
-                <img :src="`http://localhost:8082/${doctor.photo}`" class="doctor-snippet__doctor" :alt="doctor.name"/>
+                <img :src="`http://medi-back.std-272.ist.mospolytech.ru/${doctor.photo}`" class="doctor-snippet__doctor" :alt="doctor.name"/>
                 <star-rating
                         :show-rating="false"
                         :border-width="0"

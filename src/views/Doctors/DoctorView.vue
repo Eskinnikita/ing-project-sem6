@@ -11,7 +11,7 @@
             <div class="doctor-view__doctor-info doctor-info">
                 <div class="doctor-info__info">
                     <div class="doctor-info__photo">
-                        <img :src="`http://localhost:8082/${doctor.photo}`" :alt="doctor.name">
+                        <img :src="`http://medi-back.std-272.ist.mospolytech.ru/${doctor.photo}`" :alt="doctor.name">
                         <star-rating
                                 :show-rating="false"
                                 :border-width="0"
@@ -72,9 +72,8 @@
                 </template>
                 <template v-else>
                     <h2 class="title">Расписание врача</h2>
-                    <p v-if="isDoctor">Похоже, вы еще не настроили ваше расписание</p>
-                    <p v-if="isAdmin">Расписание не настроено</p>
-                    <button-comp class="doctor-schedule__edit-button_long" width="100%" @click.native="goToScheduleEdit">Перейти к настройке</button-comp>
+                    <p>Расписание не настроено</p>
+                    <button-comp v-if="isDoctor && displayToSelf" class="doctor-schedule__edit-button_long" width="100%" @click.native="goToScheduleEdit">Перейти к настройке</button-comp>
                 </template>
             </div>
         </div>

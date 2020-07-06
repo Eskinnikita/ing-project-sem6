@@ -168,22 +168,6 @@
 
 <style lang="scss" scoped>
     .schedule-edit {
-        &__title {
-            font-weight: normal;
-        }
-
-        &__working-days {
-            margin-top: 25px;
-        }
-
-        &__day-start {
-            margin-top: 20px;
-        }
-
-        &__day-end {
-            margin-top: 20px;
-        }
-
         &__cancel-button {
             display: block;
             margin-top: 15px !important;
@@ -195,14 +179,6 @@
             &:hover {
                 text-decoration: underline;
             }
-        }
-
-        &__controls {
-            @include flex(center, center, column);
-            button {
-                margin: 0;
-            }
-            margin-top: 50px;
         }
 
         &__day {
@@ -221,5 +197,30 @@
                 opacity: 1;
             }
         }
+
+        &__title {
+            font-weight: normal;
+        }
+
+        &__working-days {
+            margin-top: 25px;
+        }
+
+        &__day-start {
+            margin-top: 20px;
+        }
+
+        &__day-end {
+            margin-top: 20px;
+        }
+
+        &__controls {
+            @include flex(center, center, column);
+            button {
+                margin: 0;
+            }
+            margin-top: 50px;
+        }
+
     }
 </style>
